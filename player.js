@@ -1,4 +1,4 @@
-var pybossaPlayer = function() {
+var html5Player = function() {
     var video;
 
     function init(videoUrl, containerId) {
@@ -232,11 +232,9 @@ var vimeoPlayer = function() {
         })();
 
         this.baseUrl = 'https://player.vimeo.com/video/';
-        this.baseApiUrl = 'http://www.vimeo.com/api/v2/video/';
         this.videoId = videoUrl.split('//player.vimeo.com/video/')[1];
 
         this.iframe = document.createElement('iframe');
-        //this.iframe.setAttribute('id', this.options_.techId);
         this.iframe.setAttribute('title', 'Vimeo Video Player');
         this.iframe.setAttribute('class', 'vimeoplayer');
         this.iframe.setAttribute('src', this.baseUrl + this.videoId + '?api=1');
@@ -270,4 +268,30 @@ var vimeoPlayer = function() {
     }
 
     return {init: init, play: play, pause: pause, destroy: destroy};
+}
+
+var pybossaPlayer = function(videoUrl, containerId) {
+    var player;
+
+    if (videoUrl.split('.').indexOf('vimeo') !== -1) {
+        player = vimeoPlayer();
+    }
+    else {
+        player = html5Player();
+    }
+    player.init(videoUrl, containerId);
+
+    function play() {
+        player.play();
+    }
+
+    function pause() {
+        player.pause();
+    }
+
+    function destroy() {
+        player.destroy();
+    }
+
+    return {play: play, pause: pause, destroy: destroy};
 }
