@@ -293,5 +293,27 @@ var pybossaPlayer = function(videoUrl, containerId) {
         player.destroy();
     }
 
-    return {play: play, pause: pause, destroy: destroy};
+    function paused() {
+        return player.paused();
+    }
+
+    return {
+        play: play,
+        pause: pause,
+        destroy: destroy,
+        paused: paused,
+        duration: duration,
+        currentTime: currentTime,
+        setCurrentTime: setCurrentTime,
+        ended: ended,
+        volume: volume,
+        setVolume: setVolume,
+        muted: muted,
+        mute: mute,
+        onLoadedMetadata: onLoadedMetadata,
+        onPlay: onPlay,
+        onPause: onPause,
+        onPlayTimeChange: onPlayTimeChange,
+        onEnded: onEnded
+    };
 }
