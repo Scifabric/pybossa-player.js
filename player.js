@@ -21,7 +21,82 @@ var html5Player = function() {
         video.remove();
     }
 
-    return {init: init, play: play, pause: pause, destroy: destroy};
+    function paused() {
+        return video.paused;
+    }
+
+    function duration() {
+        return video.duration;
+    }
+
+    function currentTime() {
+        return video.currentTime;
+    }
+
+    function setCurrentTime(time) {
+        video.currentTime = time;
+    }
+
+    function ended() {
+        return video.ended;
+    }
+
+    function volume() {
+        return video.volume;
+    }
+
+    function setVolume(volume) {
+        video.volume = volume;
+    }
+
+    function muted() {
+        return video.muted;
+    }
+
+    function mute() {
+        video.muted = true;
+    }
+
+    function unmute() {
+        video.muted = false;
+    }
+
+    function onLoadedMetadata() {
+    }
+
+    function onPlay() {
+    }
+
+    function onPause() {
+    }
+
+    function onPlayTimeChange() {
+    }
+
+    function onEnded() {
+    }
+
+    return {
+        init: init,
+        play: play,
+        pause: pause,
+        destroy: destroy,
+        paused: paused,
+        duration: duration,
+        currentTime: currentTime,
+        setCurrentTime: setCurrentTime,
+        ended: ended,
+        volume: volume,
+        setVolume: setVolume,
+        muted: muted,
+        mute: mute,
+        unmute: unmute,
+        onLoadedMetadata: onLoadedMetadata,
+        onPlay: onPlay,
+        onPause: onPause,
+        onPlayTimeChange: onPlayTimeChange,
+        onEnded: onEnded
+    };
 }
 
 
@@ -279,6 +354,7 @@ var pybossaPlayer = function(videoUrl, containerId) {
     else {
         player = html5Player();
     }
+
     player.init(videoUrl, containerId);
 
     function play() {
@@ -297,6 +373,57 @@ var pybossaPlayer = function(videoUrl, containerId) {
         return player.paused();
     }
 
+    function duration() {
+        return player.duration();
+    }
+
+    function currentTime() {
+        return player.currentTime();
+    }
+
+    function setCurrentTime(time) {
+        player.setCurrentTime(time);
+    }
+
+    function ended() {
+        return player.ended();
+    }
+
+    function volume() {
+        return player.volume();
+    }
+
+    function setVolume(volume) {
+        player.setVolume(volume);
+    }
+
+    function muted() {
+        return player.muted();
+    }
+
+    function mute() {
+        player.mute();
+    }
+
+    function unmute() {
+        player.unmute();
+    }
+
+    function onLoadedMetadata() {
+    }
+
+    function onPlay() {
+    }
+
+    function onPause() {
+    }
+
+    function onPlayTimeChange() {
+    }
+
+    function onEnded() {
+    }
+
     return {
         play: play,
         pause: pause,
@@ -310,6 +437,7 @@ var pybossaPlayer = function(videoUrl, containerId) {
         setVolume: setVolume,
         muted: muted,
         mute: mute,
+        unmute: unmute,
         onLoadedMetadata: onLoadedMetadata,
         onPlay: onPlay,
         onPause: onPause,
