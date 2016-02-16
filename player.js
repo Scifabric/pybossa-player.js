@@ -61,7 +61,7 @@ var html5Player = function() {
         video.muted = false;
     }
 
-    function onLoadedMetadata(callback) {
+    function onDurationAvailable(callback) {
         video.addEventListener('loadedmetadata', callback);
     }
 
@@ -96,7 +96,7 @@ var html5Player = function() {
         muted: muted,
         mute: mute,
         unmute: unmute,
-        onLoadedMetadata: onLoadedMetadata,
+        onDurationAvailable: onDurationAvailable,
         onPlay: onPlay,
         onPause: onPause,
         onPlayTimeChange: onPlayTimeChange,
@@ -407,7 +407,8 @@ var vimeoPlayer = function() {
         _volume = _mutedPreviousVolume;
     }
 
-    function onLoadedMetadata(callback) {
+    function onDurationAvailable(callback) {
+        video.addEvent('loadProgress', callback)
     }
 
     function onPlay(callback) {
@@ -437,7 +438,7 @@ var vimeoPlayer = function() {
         muted: muted,
         mute: mute,
         unmute: unmute,
-        onLoadedMetadata: onLoadedMetadata,
+        onDurationAvailable: onDurationAvailable,
         onPlay: onPlay,
         onPause: onPause,
         onPlayTimeChange: onPlayTimeChange,
@@ -509,8 +510,8 @@ var pybossaPlayer = function(videoUrl, containerId) {
         player.unmute();
     }
 
-    function onLoadedMetadata(callback) {
-        player.onLoadedMetadata(callback);
+    function onDurationAvailable(callback) {
+        player.onDurationAvailable(callback);
     }
 
     function onPlay(callback) {
@@ -543,7 +544,7 @@ var pybossaPlayer = function(videoUrl, containerId) {
         muted: muted,
         mute: mute,
         unmute: unmute,
-        onLoadedMetadata: onLoadedMetadata,
+        onDurationAvailable: onDurationAvailable,
         onPlay: onPlay,
         onPause: onPause,
         onPlayTimeChange: onPlayTimeChange,
