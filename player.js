@@ -75,7 +75,8 @@ var html5Player = function() {
     }
 
     function onPlayTimeChange(callback) {
-        video.addEventListener('timeupdate', callback);
+        var onPlayTimeChangeCb = function() {callback(currentTime());};
+        video.addEventListener('timeupdate', onPlayTimeChangeCb);
     }
 
     function onEnded(callback) {
