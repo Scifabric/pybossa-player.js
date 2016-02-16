@@ -67,7 +67,7 @@ var html5Player = function() {
     }
 
     function onPlay(callback) {
-        video.addEventListenºer('playing', callback);
+        video.addEventListener('playing', callback);
     }
 
     function onPause(callback) {
