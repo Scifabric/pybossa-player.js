@@ -355,7 +355,7 @@ var vimeoPlayer = function() {
         video.addEvent('pause', function() {_paused = true;});
         video.addEvent('play', function() {_paused = false;});
         video.addEvent('playProgress', function(value) {_currentTime = value.seconds;});
-        video.addEvent('loadProgress', function(value) {_duration = value.duration});
+        video.addEvent('loadProgress', function(value) {_duration = value.duration;});
         video.api('getVolume', function(value) {_volume = value;});
         video.api('getDuration', function(value) {_duration = value;});
     }
@@ -417,18 +417,43 @@ var vimeoPlayer = function() {
     }
 
     function onDurationAvailable(callback) {
+        video.api('ready', function() {
+            video.api('getDuration', function(duration) {
+                callback(duration);
+            })
+        });
     }
 
     function onPlay(callback) {
+        video.api('ready', function() {
+            video.addEvent('play', function() {
+                callback();
+            })
+        });
     }
 
     function onPause(callback) {
+        video.api('ready', function() {
+            video.addEvent('pause', function() {
+                callback();
+            })
+        });
     }
 
     function onPlayTimeChange(callback) {
+        video.api('ready', function() {
+            video.addEvent('playProgress', function(data) {
+                callback(data.seconds);
+            })
+        });
     }
 
     function onEnded(callback) {
+        video.api('ready', function() {
+            video.addEvent('finish', function() {
+                callback();
+            })
+        });
     }
 
     return {
