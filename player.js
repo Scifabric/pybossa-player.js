@@ -184,7 +184,7 @@ var vimeoPlayer = function() {
                     var self = this,
                         element = self.element,
                         target_id = element.id !== '' ? element.id : null,
-                        removed = removeCallback(eventName, target_id);
+                        removed = removeCallbacks(eventName, target_id);
 
                     if (eventName != 'ready' && removed) {
                         postMessage('removeEventListener', eventName, element);
@@ -231,10 +231,10 @@ var vimeoPlayer = function() {
                     eventData = data.data,
                     target_id = target_id === '' ? null : data.player_id,
 
-                    callback = getCallback(method, target_id),
+                    callbacks = getCallbacks(method, target_id),
                     params = [];
 
-                if (!callback) {
+                if (!callbacks) {
                     return false;
                 }
 
@@ -250,7 +250,9 @@ var vimeoPlayer = function() {
                     params.push(target_id);
                 }
 
-                return params.length > 0 ? callback.apply(null, params) : callback.call();
+                callbacks.forEach(function(callback) {
+                    params.length > 0 ? callback.apply(null, params) : callback.call();
+                });
             }
 
             function storeCallback(eventName, callback, target_id) {
@@ -258,14 +260,20 @@ var vimeoPlayer = function() {
                     if (!eventCallbacks[target_id]) {
                         eventCallbacks[target_id] = {};
                     }
-                    eventCallbacks[target_id][eventName] = callback;
+                    if (!eventCallbacks[target_id][eventName]) {
+                        eventCallbacks[target_id][eventName] = [];
+                    }
+                    eventCallbacks[target_id][eventName].push(callback);
                 }
                 else {
-                    eventCallbacks[eventName] = callback;
+                    if (!eventCallbacks[eventName]) {
+                        eventCallbacks[eventName] = [];
+                    }
+                    eventCallbacks[eventName].push(callback);
                 }
             }
 
-            function getCallback(eventName, target_id) {
+            function getCallbacks(eventName, target_id) {
                 if (target_id) {
                     return eventCallbacks[target_id][eventName];
                 }
@@ -274,7 +282,7 @@ var vimeoPlayer = function() {
                 }
             }
 
-            function removeCallback(eventName, target_id) {
+            function removeCallbacks(eventName, target_id) {
                 if (target_id && eventCallbacks[target_id]) {
                     if (!eventCallbacks[target_id][eventName]) {
                         return false;
