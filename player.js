@@ -62,11 +62,12 @@ var html5Player = function() {
     }
 
     function onDurationAvailable(callback) {
-        video.addEventListener('loadedmetadata', callback);
+        var onLoadedMetadata = function() {callback(duration());};
+        video.addEventListener('loadedmetadata', onLoadedMetadata);
     }
 
     function onPlay(callback) {
-        video.addEventListener('playing', callback);
+        video.addEventListenºer('playing', callback);
     }
 
     function onPause(callback) {
@@ -408,7 +409,6 @@ var vimeoPlayer = function() {
     }
 
     function onDurationAvailable(callback) {
-        video.addEvent('loadProgress', callback)
     }
 
     function onPlay(callback) {
