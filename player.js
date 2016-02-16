@@ -206,7 +206,7 @@ var vimeoPlayer = function() {
                     data = JSON.parse(event.data);
                     method = data.event || data.method;
                 }
-                catch(e)  {
+                catch(e) {
                 }
 
                 if (method == 'ready' && !isReady) {
@@ -328,6 +328,22 @@ var vimeoPlayer = function() {
         divWrapper.setAttribute('class', 'vimeoFrame');
         divWrapper.appendChild(this.iframe);
         document.getElementById(containerId).appendChild(divWrapper);
+        video.addEvent('ready', setPlayerInformationCallbacks);
+    }
+
+    var _volume = 1.0,
+        _duration = 0,
+        _currentTime = 0,
+        _paused = true,
+        _mutedPreviousVolume = 1.0;
+
+    function setPlayerInformationCallbacks() {
+        video.addEvent('pause', function() {_paused = true;});
+        video.addEvent('play', function() {_paused = false;});
+        video.addEvent('playProgress', function(value) {_currentTime = value.seconds;});
+        video.addEvent('loadProgress', function(value) {_duration = value.duration});
+        video.api('getVolume', function(value) {_volume = value;});
+        video.api('getDuration', function(value) {_duration = value;});
     }
 
     function play() {
@@ -341,8 +357,87 @@ var vimeoPlayer = function() {
     function destroy() {
         divWrapper.remove();
     }
+    function paused() {
+        return _paused;
+    }
 
-    return {init: init, play: play, pause: pause, destroy: destroy};
+    function duration() {
+        return _duration;
+    }
+
+    function currentTime() {
+        return _currentTime;
+    }
+
+    function setCurrentTime(time) {
+        var wasPaused = _paused;
+        video.api('seekTo', time);
+        if (wasPaused) player.pause();
+    }
+
+    function ended() {
+        return currentTime() === duration();
+    }
+
+    function volume() {
+        return _volume;
+    }
+
+    function setVolume(vol) {
+        video.api('setVolume', vol);
+        _volume = vol;
+    }
+
+    function muted() {
+        return volume() === 0;
+    }
+
+    function mute() {
+        _mutedPreviousVolume = volume();
+        setVolume(0);
+    }
+
+    function unmute() {
+        video.api('setVolume', _mutedPreviousVolume);
+        _volume = _mutedPreviousVolume;
+    }
+
+    function onLoadedMetadata() {
+    }
+
+    function onPlay() {
+    }
+
+    function onPause() {
+    }
+
+    function onPlayTimeChange() {
+    }
+
+    function onEnded() {
+    }
+
+    return {
+        init: init,
+        play: play,
+        pause: pause,
+        destroy: destroy,
+        paused: paused,
+        duration: duration,
+        currentTime: currentTime,
+        setCurrentTime: setCurrentTime,
+        ended: ended,
+        volume: volume,
+        setVolume: setVolume,
+        muted: muted,
+        mute: mute,
+        unmute: unmute,
+        onLoadedMetadata: onLoadedMetadata,
+        onPlay: onPlay,
+        onPause: onPause,
+        onPlayTimeChange: onPlayTimeChange,
+        onEnded: onEnded
+    };
 }
 
 var pybossaPlayer = function(videoUrl, containerId) {
