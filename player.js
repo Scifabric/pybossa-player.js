@@ -359,6 +359,24 @@ var vimeoPlayer = function() {
         video.addEvent('loadProgress', function(value) {_duration = value.duration;});
         video.api('getVolume', function(value) {_volume = value;});
         video.api('getDuration', function(value) {_duration = value;});
+        injectCss();
+    }
+
+    function injectCss() {
+      var css = '.vimeoplayer { width:100%; height:180%; position:absolute; left:0; top:-40%; }';
+
+      var head = document.head || document.getElementsByTagName('head')[0];
+
+      var style = document.createElement('style');
+      style.type = 'text/css';
+
+      if (style.styleSheet){
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+
+      head.appendChild(style);
     }
 
     function play() {
