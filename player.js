@@ -403,7 +403,7 @@ var vimeoPlayer = function() {
     }
 
     function setCurrentTime(time) {
-        var wasPaused = _paused;
+        var wasPaused = paused();
         video.api('seekTo', time);
         if (wasPaused) player.pause();
     }
