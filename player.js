@@ -480,14 +480,155 @@ var vimeoPlayer = function() {
     };
 }
 
+
+var youtubePlayer = function() {
+    var player;
+
+    function init(videoUrl, containerId) {
+        var div = document.createElement('div');
+        div.setAttribute('id', containerId);
+        div.setAttribute('style', 'width:100%;height:100%;top:0;left:0;position:absolute');
+
+        var divWrapper = document.createElement('div');
+        divWrapper.appendChild(div);
+
+        document.getElementById(containerId).appendChild(divWrapper);
+        window.onYouTubeIframeAPIReady = function() {createPlayer(videoUrl, containerId);}
+        loadApi();
+    }
+
+    function createPlayer(videoUrl, containerId) {
+        var videoId = extractVideoId(videoUrl);
+        player = new YT.Player(containerId, {
+            height: '390',
+            width: '640',
+            videoId: videoId,
+            events: {}
+        });
+    }
+
+    function extractVideoId(videoUrl) {
+        var rx = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+        var r = videoUrl.match(rx);
+        return r[1];
+    }
+
+    function loadApi() {
+        var tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+
+    function play() {
+        player.playVideo();
+    }
+
+    function pause() {
+        player.pauseVideo();
+    }
+
+    function destroy() {
+        player.destroy();
+    }
+
+    function paused() {
+        return player.getPlayerState() !== 1;
+    }
+
+    function duration() {
+        return player.getDuration();
+    }
+
+    function currentTime() {
+        return player.getCurrentTime();
+    }
+
+    function setCurrentTime(time) {
+        var wasPaused = paused();
+        player.seekTo(time);
+        if (wasPaused) pause();
+    }
+
+    function ended() {
+        return player.getPlayerState() === 0;
+    }
+
+    function volume() {
+        return player.getVolume() / 100.0;
+    }
+
+    function setVolume(volume) {
+        player.setVolume(volume * 100);
+    }
+
+    function muted() {
+        return player.isMuted();
+    }
+
+    function mute() {
+        player.mute();
+    }
+
+    function unmute() {
+        player.unMute();
+    }
+
+    function onDurationAvailable(callback) {
+    }
+
+    function onPlay(callback) {
+    }
+
+    function onPause(callback) {
+    }
+
+    function onPlayTimeChange(callback) {
+    }
+
+    function onEnded(callback) {
+    }
+
+    return {
+        init: init,
+        play: play,
+        pause: pause,
+        destroy: destroy,
+        paused: paused,
+        duration: duration,
+        currentTime: currentTime,
+        setCurrentTime: setCurrentTime,
+        ended: ended,
+        volume: volume,
+        setVolume: setVolume,
+        muted: muted,
+        mute: mute,
+        unmute: unmute,
+        onDurationAvailable: onDurationAvailable,
+        onPlay: onPlay,
+        onPause: onPause,
+        onPlayTimeChange: onPlayTimeChange,
+        onEnded: onEnded
+    };
+}
+
 var pybossaPlayer = function(videoUrl, containerId) {
     var player;
 
     if (videoUrl.split('.').indexOf('vimeo') !== -1) {
         player = vimeoPlayer();
     }
+    else if (isYoutubeLink(videoUrl)){
+        player = youtubePlayer();
+    }
     else {
         player = html5Player();
+    }
+
+    function isYoutubeLink(link) {
+        var rx = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+        var r = link.match(rx);
+        return r !== null;
     }
 
     player.init(videoUrl, containerId);
