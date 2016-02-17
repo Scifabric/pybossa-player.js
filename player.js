@@ -500,7 +500,8 @@ var vimeoPlayer = function() {
 
 
 var youtubePlayer = function() {
-    var player;
+    var player,
+        durationReadyCallback = function(){};
 
     function init(videoUrl, containerId) {
         var div = document.createElement('div');
@@ -521,7 +522,7 @@ var youtubePlayer = function() {
             height: '390',
             width: '640',
             videoId: videoId,
-            events: {}
+            events: {onReady: playerReady}
         });
     }
 
@@ -529,6 +530,10 @@ var youtubePlayer = function() {
         var rx = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
         var r = videoUrl.match(rx);
         return r[1];
+    }
+
+    function playerReady() {
+        durationReadyCallback(duration());
     }
 
     function loadApi() {
@@ -593,6 +598,12 @@ var youtubePlayer = function() {
     }
 
     function onDurationAvailable(callback) {
+        if (player) {
+            callback(duration());
+        }
+        else {
+            durationReadyCallback = callback;
+        }
     }
 
     function onPlay(callback) {
