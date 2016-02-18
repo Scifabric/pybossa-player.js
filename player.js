@@ -1,86 +1,87 @@
-var html5Player = function() {
-    var video;
+var html5Player = function(isAudio) {
+    var player;
 
-    function init(videoUrl, containerId) {
-        video = document.createElement("video");
-        video.setAttribute("src", videoUrl);
-        video.setAttribute("width", 512);
-        video.setAttribute('controls', true);
-        document.getElementById(containerId).appendChild(video);
+    function init(url, containerId) {
+        var element = isAudio ? "audio" :  "video";
+        player = document.createElement(element);
+        player.setAttribute("src", url);
+        player.setAttribute("width", 512);
+        player.setAttribute('controls', true);
+        document.getElementById(containerId).appendChild(player);
     }
 
     function play() {
-        video.play();
+        player.play();
     }
 
     function pause() {
-        video.pause();
+        player.pause();
     }
 
     function destroy() {
-        video.remove();
+        player.remove();
     }
 
     function paused() {
-        return video.paused;
+        return player.paused;
     }
 
     function duration() {
-        return video.duration;
+        return player.duration;
     }
 
     function currentTime() {
-        return video.currentTime;
+        return player.currentTime;
     }
 
     function setCurrentTime(time) {
-        video.currentTime = time;
+        player.currentTime = time;
     }
 
     function ended() {
-        return video.ended;
+        return player.ended;
     }
 
     function volume() {
-        return video.volume;
+        return player.volume;
     }
 
     function setVolume(volume) {
-        video.volume = volume;
+        player.volume = volume;
     }
 
     function muted() {
-        return video.muted;
+        return player.muted;
     }
 
     function mute() {
-        video.muted = true;
+        player.muted = true;
     }
 
     function unmute() {
-        video.muted = false;
+        player.muted = false;
     }
 
     function onDurationAvailable(callback) {
         var onLoadedMetadata = function() {callback(duration());};
-        video.addEventListener('loadedmetadata', onLoadedMetadata);
+        player.addEventListener('loadedmetadata', onLoadedMetadata);
     }
 
     function onPlay(callback) {
-        video.addEventListener('playing', callback);
+        player.addEventListener('playing', callback);
     }
 
     function onPause(callback) {
-        video.addEventListener('pause', callback);
+        player.addEventListener('pause', callback);
     }
 
     function onPlayTimeChange(callback) {
         var onPlayTimeChangeCb = function() {callback(currentTime());};
-        video.addEventListener('timeupdate', onPlayTimeChangeCb);
+        player.addEventListener('timeupdate', onPlayTimeChangeCb);
     }
 
     function onEnded(callback) {
-        video.addEventListener('ended', callback);
+        player.addEventListener('ended', callback);
     }
 
     return {
@@ -673,7 +674,7 @@ var youtubePlayer = function() {
     };
 }
 
-var pybossaPlayer = function(videoUrl, containerId) {
+var pybossaPlayer = function(videoUrl, containerId, isAudio) {
     var player;
 
     if (videoUrl.split('.').indexOf('vimeo') !== -1) {
@@ -683,7 +684,7 @@ var pybossaPlayer = function(videoUrl, containerId) {
         player = youtubePlayer();
     }
     else {
-        player = html5Player();
+        player = html5Player(isAudio);
     }
 
     function isYoutubeLink(link) {
