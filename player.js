@@ -501,7 +501,11 @@ var vimeoPlayer = function() {
 
 var youtubePlayer = function() {
     var player,
-        durationReadyCallback = function(){};
+        durationReadyCallback = function() {},
+        onPlayCallback = function() {},
+        onPauseCallback = function() {},
+        onPlayTimeChangeCallback = function() {},
+        onEndedCallback = function() {};
 
     function init(videoUrl, containerId) {
         var div = document.createElement('div');
@@ -522,7 +526,10 @@ var youtubePlayer = function() {
             height: '390',
             width: '640',
             videoId: videoId,
-            events: {onReady: playerReady}
+            events: {
+                onReady: onPlayerReady,
+                onStateChange: onPlayerStateChange
+            }
         });
     }
 
@@ -532,8 +539,24 @@ var youtubePlayer = function() {
         return r[1];
     }
 
-    function playerReady() {
+    function onPlayerReady() {
         durationReadyCallback(duration());
+    }
+
+    function onPlayerStateChange(event) {
+        var state = event.data;
+        if (state === 1) {
+            onPlayCallback();
+            return;
+        }
+        if (state === 2) {
+            onPauseCallback();
+            return;
+        }
+        if (state === 0) {
+            onEndedCallback();
+            return;
+        }
     }
 
     function loadApi() {
@@ -607,15 +630,24 @@ var youtubePlayer = function() {
     }
 
     function onPlay(callback) {
+        onPlayCallback = callback;
     }
 
     function onPause(callback) {
+        onPauseCallback = callback;
     }
 
     function onPlayTimeChange(callback) {
+        onPlayTimeChangeCallback = callback;
+        var onTimeChange = function() {
+            var time = currentTime();
+            if (!paused()) onPlayTimeChangeCallback(time);
+        }
+        var timeUpdate = window.setInterval(onTimeChange, 200);
     }
 
     function onEnded(callback) {
+        onEndedCallback = callback;
     }
 
     return {
