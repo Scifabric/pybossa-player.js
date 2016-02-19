@@ -507,7 +507,8 @@ var youtubePlayer = function() {
         onPauseCallback = function() {},
         onPlayTimeChangeCallback = function() {},
         onEndedCallback = function() {},
-        INNER_CONTAINER = 'youtube-container-' + Date.now();
+        INNER_CONTAINER = 'youtube-container-' + Date.now(),
+        timeUpdateInterval;
 
     function init(videoUrl, containerId) {
         var div = document.createElement('div');
@@ -594,6 +595,7 @@ var youtubePlayer = function() {
             window.onPreviousPlayerDestroyed();
             delete window.onPreviousPlayerDestroyed;
         }
+        clearInterval(timeUpdateInterval);
     }
 
     function paused() {
@@ -661,7 +663,7 @@ var youtubePlayer = function() {
             var time = currentTime();
             if (!paused()) onPlayTimeChangeCallback(time);
         }
-        var timeUpdate = window.setInterval(onTimeChange, 200);
+        timeUpdateInterval = setInterval(onTimeChange, 200);
     }
 
     function onEnded(callback) {
