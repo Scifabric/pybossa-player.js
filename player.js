@@ -506,24 +506,37 @@ var youtubePlayer = function() {
         onPlayCallback = function() {},
         onPauseCallback = function() {},
         onPlayTimeChangeCallback = function() {},
-        onEndedCallback = function() {};
+        onEndedCallback = function() {},
+        INNER_CONTAINER = 'youtube-container-' + Date.now();
 
     function init(videoUrl, containerId) {
         var div = document.createElement('div');
-        div.setAttribute('id', containerId);
-        div.setAttribute('style', 'width:100%;height:100%;top:0;left:0;position:absolute');
-
+        div.setAttribute('id', INNER_CONTAINER);
         var divWrapper = document.createElement('div');
-        divWrapper.appendChild(div);
 
-        document.getElementById(containerId).appendChild(divWrapper);
-        window.onYouTubeIframeAPIReady = function() {createPlayer(videoUrl, containerId);}
-        loadApi();
+        document.getElementById(containerId).appendChild(div);
+
+        var iFrameApiTag = document.getElementById('yt-iframe-api');
+        if (iFrameApiTag) {
+            var createNewPlayer = function() {
+                createPlayer(videoUrl, INNER_CONTAINER);
+                window.onPreviousPlayerDestroyed = undefined;
+            };
+            window.onPreviousPlayerDestroyed = createNewPlayer;
+            createNewPlayer();
+            window.onYouTubeIframeAPIReady = undefined;
+        }
+        else {
+            window.onYouTubeIframeAPIReady = function() {
+                createPlayer(videoUrl, INNER_CONTAINER);
+            };
+            loadApi();
+        }
     }
 
-    function createPlayer(videoUrl, containerId) {
+    function createPlayer(videoUrl) {
         var videoId = extractVideoId(videoUrl);
-        player = new YT.Player(containerId, {
+        player = new YT.Player(INNER_CONTAINER, {
             height: '390',
             width: '640',
             videoId: videoId,
@@ -562,6 +575,7 @@ var youtubePlayer = function() {
 
     function loadApi() {
         var tag = document.createElement('script');
+        tag.setAttribute('id', 'yt-iframe-api');
         tag.src = 'https://www.youtube.com/iframe_api';
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
@@ -577,6 +591,11 @@ var youtubePlayer = function() {
 
     function destroy() {
         player.destroy();
+        document.getElementById(INNER_CONTAINER).remove();
+        if (window.onPreviousPlayerDestroyed) {
+            window.onPreviousPlayerDestroyed();
+            window.onPreviousPlayerDestroyed = undefined;
+        }
     }
 
     function paused() {
