@@ -518,11 +518,11 @@ var youtubePlayer = function() {
         if (iFrameApiTag) {
             var createNewPlayer = function() {
                 createPlayer(videoUrl, INNER_CONTAINER);
-                window.onPreviousPlayerDestroyed = undefined;
+                delete window.onPreviousPlayerDestroyed;
             };
             window.onPreviousPlayerDestroyed = createNewPlayer;
             createNewPlayer();
-            window.onYouTubeIframeAPIReady = undefined;
+            delete window.onYouTubeIframeAPIReady;
         }
         else {
             window.onYouTubeIframeAPIReady = function() {
@@ -592,7 +592,7 @@ var youtubePlayer = function() {
         document.getElementById(INNER_CONTAINER).remove();
         if (window.onPreviousPlayerDestroyed) {
             window.onPreviousPlayerDestroyed();
-            window.onPreviousPlayerDestroyed = undefined;
+            delete window.onPreviousPlayerDestroyed;
         }
     }
 
