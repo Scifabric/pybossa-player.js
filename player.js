@@ -512,8 +512,6 @@ var youtubePlayer = function() {
     function init(videoUrl, containerId) {
         var div = document.createElement('div');
         div.setAttribute('id', INNER_CONTAINER);
-        var divWrapper = document.createElement('div');
-
         document.getElementById(containerId).appendChild(div);
 
         var iFrameApiTag = document.getElementById('yt-iframe-api');
