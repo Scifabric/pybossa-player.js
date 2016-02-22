@@ -436,11 +436,11 @@ var vimeoPlayer = function() {
     }
 
     function onReady(callback) {
-        player.api('ready', callback);
+        player.addEvent('ready', callback);
     }
 
     function onPlay(callback) {
-        player.api('ready', function() {
+        player.addEvent('ready', function() {
             player.addEvent('play', function() {
                 callback();
             })
@@ -448,7 +448,7 @@ var vimeoPlayer = function() {
     }
 
     function onPause(callback) {
-        player.api('ready', function() {
+        player.addEvent('ready', function() {
             player.addEvent('pause', function() {
                 callback();
             })
@@ -456,7 +456,7 @@ var vimeoPlayer = function() {
     }
 
     function onPlayTimeChange(callback) {
-        player.api('ready', function() {
+        player.addEvent('ready', function() {
             player.addEvent('playProgress', function(data) {
                 callback(data.seconds);
             })
@@ -464,7 +464,7 @@ var vimeoPlayer = function() {
     }
 
     function onEnded(callback) {
-        player.api('ready', function() {
+        player.addEvent('ready', function() {
             player.addEvent('finish', function() {
                 callback();
             })
