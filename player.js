@@ -507,18 +507,18 @@ var youtubePlayer = function() {
         onPauseCallback = function() {},
         onPlayTimeChangeCallback = function() {},
         onEndedCallback = function() {},
-        INNER_CONTAINER = 'youtube-container-' + Date.now(),
+        playerContainer = 'youtube-container-' + Date.now(),
         timeUpdateInterval;
 
     function init(videoUrl, containerId) {
         var div = document.createElement('div');
-        div.setAttribute('id', INNER_CONTAINER);
+        div.setAttribute('id', playerContainer);
         document.getElementById(containerId).appendChild(div);
 
         var iFrameApiTag = document.getElementById('yt-iframe-api');
         if (iFrameApiTag) {
             var createNewPlayer = function() {
-                createPlayer(videoUrl, INNER_CONTAINER);
+                createPlayer(videoUrl, playerContainer);
                 delete window.onPreviousPlayerDestroyed;
             };
             window.onPreviousPlayerDestroyed = createNewPlayer;
@@ -527,7 +527,7 @@ var youtubePlayer = function() {
         }
         else {
             window.onYouTubeIframeAPIReady = function() {
-                createPlayer(videoUrl, INNER_CONTAINER);
+                createPlayer(videoUrl, playerContainer);
             };
             loadApi();
         }
@@ -535,7 +535,7 @@ var youtubePlayer = function() {
 
     function createPlayer(videoUrl) {
         var videoId = extractVideoId(videoUrl);
-        player = new YT.Player(INNER_CONTAINER, {
+        player = new YT.Player(playerContainer, {
             height: '390',
             width: '640',
             videoId: videoId,
@@ -590,7 +590,7 @@ var youtubePlayer = function() {
 
     function destroy() {
         player.destroy();
-        document.getElementById(INNER_CONTAINER).remove();
+        document.getElementById(playerContainer).remove();
         if (window.onPreviousPlayerDestroyed) {
             window.onPreviousPlayerDestroyed();
             delete window.onPreviousPlayerDestroyed;
