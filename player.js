@@ -388,8 +388,14 @@ var vimeoPlayer = function() {
     }
 
     function destroy() {
+        player.removeEvent('ready');
+        player.removeEvent('play');
+        player.removeEvent('pause');
+        player.removeEvent('playProgress');
+        player.removeEvent('loadProgress');
         divWrapper.remove();
     }
+
     function paused() {
         return _paused;
     }
