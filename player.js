@@ -405,7 +405,7 @@ var vimeoPlayer = function() {
     function setCurrentTime(time) {
         var wasPaused = paused();
         player.api('seekTo', time);
-        if (wasPaused) player.pause();
+        if (wasPaused) pause();
     }
 
     function ended() {
