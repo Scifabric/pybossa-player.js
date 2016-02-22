@@ -810,16 +810,16 @@ var soundcloudPlayer = function() {
 }
 
 
-var pybossaPlayer = function(videoUrl, containerId, isAudio) {
+var pybossaPlayer = function(mediaUrl, containerId, isAudio) {
     var player;
 
-    if (videoUrl.split('.').indexOf('vimeo') !== -1) {
+    if (isVimeoLink(mediaUrl)) {
         player = vimeoPlayer();
     }
-    else if (isYoutubeLink(videoUrl)){
+    else if (isYoutubeLink(mediaUrl)){
         player = youtubePlayer();
     }
-    else if (videoUrl.indexOf('soundcloud') !== -1) {
+    else if (isSoundcloudLink(mediaUrl)) {
         player = soundcloudPlayer();
     }
     else {
@@ -832,7 +832,15 @@ var pybossaPlayer = function(videoUrl, containerId, isAudio) {
         return r !== null;
     }
 
-    player.init(videoUrl, containerId);
+    function isVimeoLink(link) {
+        return link.split('.').indexOf('vimeo') !== -1;
+    }
+
+    function isSoundcloudLink(link) {
+        return link.indexOf('soundcloud') !== -1;
+    }
+
+    player.init(mediaUrl, containerId);
 
     function play() {
         player.play();
