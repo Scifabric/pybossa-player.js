@@ -518,7 +518,7 @@ var youtubePlayer = function() {
         var iFrameApiTag = document.getElementById('yt-iframe-api');
         if (iFrameApiTag) {
             var createNewPlayer = function() {
-                createPlayer(videoUrl, playerContainer);
+                createPlayer(videoUrl);
                 delete window.onPreviousPlayerDestroyed;
             };
             window.onPreviousPlayerDestroyed = createNewPlayer;
@@ -527,7 +527,7 @@ var youtubePlayer = function() {
         }
         else {
             window.onYouTubeIframeAPIReady = function() {
-                createPlayer(videoUrl, playerContainer);
+                createPlayer(videoUrl);
             };
             loadApi();
         }
