@@ -62,9 +62,8 @@ var html5Player = function(isAudio) {
         player.muted = false;
     }
 
-    function onDurationAvailable(callback) {
-        var onLoadedMetadata = function() {callback(duration());};
-        player.addEventListener('loadedmetadata', onLoadedMetadata);
+    function onReady(callback) {
+        player.addEventListener('loadedmetadata', callback);
     }
 
     function onPlay(callback) {
@@ -99,7 +98,7 @@ var html5Player = function(isAudio) {
         muted: muted,
         mute: mute,
         unmute: unmute,
-        onDurationAvailable: onDurationAvailable,
+        onReady: onReady,
         onPlay: onPlay,
         onPause: onPause,
         onPlayTimeChange: onPlayTimeChange,
@@ -436,12 +435,8 @@ var vimeoPlayer = function() {
         _volume = _mutedPreviousVolume;
     }
 
-    function onDurationAvailable(callback) {
-        player.api('ready', function() {
-            player.api('getDuration', function(duration) {
-                callback(duration);
-            })
-        });
+    function onReady(callback) {
+        player.api('ready', callback);
     }
 
     function onPlay(callback) {
@@ -491,7 +486,7 @@ var vimeoPlayer = function() {
         muted: muted,
         mute: mute,
         unmute: unmute,
-        onDurationAvailable: onDurationAvailable,
+        onReady: onReady,
         onPlay: onPlay,
         onPause: onPause,
         onPlayTimeChange: onPlayTimeChange,
@@ -502,7 +497,7 @@ var vimeoPlayer = function() {
 
 var youtubePlayer = function() {
     var player,
-        durationReadyCallback = function() {},
+        onReadyCallback = function() {},
         onPlayCallback = function() {},
         onPauseCallback = function() {},
         onPlayTimeChangeCallback = function() {},
@@ -553,7 +548,7 @@ var youtubePlayer = function() {
     }
 
     function onPlayerReady() {
-        durationReadyCallback(duration());
+        onReadyCallback();
     }
 
     function onPlayerStateChange(event) {
@@ -640,12 +635,12 @@ var youtubePlayer = function() {
         player.unMute();
     }
 
-    function onDurationAvailable(callback) {
+    function onReady(callback) {
         if (player) {
-            callback(duration());
+            callback();
         }
         else {
-            durationReadyCallback = callback;
+            onReadyCallback = callback;
         }
     }
 
@@ -685,7 +680,7 @@ var youtubePlayer = function() {
         muted: muted,
         mute: mute,
         unmute: unmute,
-        onDurationAvailable: onDurationAvailable,
+        onReady: onReady,
         onPlay: onPlay,
         onPause: onPause,
         onPlayTimeChange: onPlayTimeChange,
@@ -696,7 +691,7 @@ var youtubePlayer = function() {
 
 var soundcloudPlayer = function() {
     var player,
-        durationReadyCallback = function() {};
+        onReadyCallback = function() {};
 
     function init(audioUrl, containerId) {
         var iFrameApiTag = document.getElementById('sc-iframe-api');
@@ -716,7 +711,7 @@ var soundcloudPlayer = function() {
         iframe.setAttribute('scrolling', 'no');
         iframe.setAttribute('frameborder', 'no');
         player = SC.Widget(iframe);
-        player.bind(SC.Widget.Events.READY, durationReadyCallback);
+        player.bind(SC.Widget.Events.READY, onReadyCallback);
         document.getElementById(containerId).appendChild(iframe);
     }
 
@@ -770,8 +765,8 @@ var soundcloudPlayer = function() {
     function unmute() {
     }
 
-    function onDurationAvailable(callback) {
-        durationReadyCallback = callback;
+    function onReady(callback) {
+        onReadyCallback = callback;
     }
 
     function onPlay(callback) {
@@ -801,7 +796,7 @@ var soundcloudPlayer = function() {
         muted: muted,
         mute: mute,
         unmute: unmute,
-        onDurationAvailable: onDurationAvailable,
+        onReady: onReady,
         onPlay: onPlay,
         onPause: onPause,
         onPlayTimeChange: onPlayTimeChange,
@@ -894,8 +889,8 @@ var pybossaPlayer = function(mediaUrl, containerId, isAudio) {
         player.unmute();
     }
 
-    function onDurationAvailable(callback) {
-        player.onDurationAvailable(callback);
+    function onReady(callback) {
+        player.onReady(callback);
     }
 
     function onPlay(callback) {
@@ -928,7 +923,7 @@ var pybossaPlayer = function(mediaUrl, containerId, isAudio) {
         muted: muted,
         mute: mute,
         unmute: unmute,
-        onDurationAvailable: onDurationAvailable,
+        onReady: onReady,
         onPlay: onPlay,
         onPause: onPause,
         onPlayTimeChange: onPlayTimeChange,
