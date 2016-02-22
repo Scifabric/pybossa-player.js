@@ -573,11 +573,11 @@ var youtubePlayer = function() {
     }
 
     function loadApi() {
-        var tag = document.createElement('script');
-        tag.setAttribute('id', 'yt-iframe-api');
-        tag.src = 'https://www.youtube.com/iframe_api';
+        var script = document.createElement('script');
+        script.setAttribute('id', 'yt-iframe-api');
+        script.src = 'https://www.youtube.com/iframe_api';
         var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
     }
 
     function play() {
@@ -693,6 +693,123 @@ var youtubePlayer = function() {
     };
 }
 
+
+var soundcloudPlayer = function() {
+    var player,
+        durationReadyCallback = function() {};
+
+    function init(audioUrl, containerId) {
+        var iFrameApiTag = document.getElementById('sc-iframe-api');
+        if (iFrameApiTag) {
+            createPlayer(audioUrl, containerId);
+        }
+        else {
+            loadApi(createPlayer.bind(this, audioUrl, containerId));
+        }
+    }
+
+    function createPlayer(audioUrl, containerId) {
+        var baseUrl = 'https://w.soundcloud.com/player/?url=';
+        var iframe = document.createElement('iframe');
+        iframe.setAttribute('src', baseUrl + audioUrl);
+        iframe.setAttribute('width', '100%');
+        iframe.setAttribute('scrolling', 'no');
+        iframe.setAttribute('frameborder', 'no');
+        player = SC.Widget(iframe);
+        player.bind(SC.Widget.Events.READY, durationReadyCallback);
+        document.getElementById(containerId).appendChild(iframe);
+    }
+
+    function loadApi(onload) {
+        var script = document.createElement('script');
+        script.setAttribute('id', 'sc-iframe-api');
+        script.onload = onload;
+        script.src = 'https://w.soundcloud.com/player/api.js';
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+    }
+
+    function play() {
+        player.play();
+    }
+
+    function pause() {
+        player.pause();
+    }
+
+    function destroy() {
+    }
+
+    function paused() {
+    }
+
+    function duration() {
+    }
+
+    function currentTime() {
+    }
+
+    function setCurrentTime(time) {
+    }
+
+    function ended() {
+    }
+
+    function volume() {
+    }
+
+    function setVolume(vol) {
+    }
+
+    function muted() {
+    }
+
+    function mute() {
+    }
+
+    function unmute() {
+    }
+
+    function onDurationAvailable(callback) {
+        durationReadyCallback = callback;
+    }
+
+    function onPlay(callback) {
+    }
+
+    function onPause(callback) {
+    }
+
+    function onPlayTimeChange(callback) {
+    }
+
+    function onEnded(callback) {
+    }
+
+    return {
+        init: init,
+        play: play,
+        pause: pause,
+        destroy: destroy,
+        paused: paused,
+        duration: duration,
+        currentTime: currentTime,
+        setCurrentTime: setCurrentTime,
+        ended: ended,
+        volume: volume,
+        setVolume: setVolume,
+        muted: muted,
+        mute: mute,
+        unmute: unmute,
+        onDurationAvailable: onDurationAvailable,
+        onPlay: onPlay,
+        onPause: onPause,
+        onPlayTimeChange: onPlayTimeChange,
+        onEnded: onEnded
+    };
+}
+
+
 var pybossaPlayer = function(videoUrl, containerId, isAudio) {
     var player;
 
@@ -701,6 +818,9 @@ var pybossaPlayer = function(videoUrl, containerId, isAudio) {
     }
     else if (isYoutubeLink(videoUrl)){
         player = youtubePlayer();
+    }
+    else if (videoUrl.indexOf('soundcloud') !== -1) {
+        player = soundcloudPlayer();
     }
     else {
         player = html5Player(isAudio);
