@@ -109,7 +109,7 @@ var html5Player = function(isAudio) {
 
 
 var vimeoPlayer = function() {
-    var video,
+    var player,
         divWrapper;
 
     function init(videoUrl, containerId) {
@@ -337,14 +337,14 @@ var vimeoPlayer = function() {
         this.iframe.setAttribute('mozallowfullscreen', '0');
         this.iframe.setAttribute('allowFullScreen', '0');
 
-        video = vimeoApi(this.iframe);
+        player = vimeoApi(this.iframe);
 
         divWrapper = document.createElement('div');
         divWrapper.setAttribute('style', 'margin:0 auto;padding-bottom:56.25%;width:100%;height:0;position:relative;overflow:hidden;');
         divWrapper.setAttribute('class', 'vimeoFrame');
         divWrapper.appendChild(this.iframe);
         document.getElementById(containerId).appendChild(divWrapper);
-        video.addEvent('ready', setPlayerInformationCallbacks);
+        player.addEvent('ready', setPlayerInformationCallbacks);
     }
 
     var _volume = 1.0,
@@ -354,12 +354,12 @@ var vimeoPlayer = function() {
         _mutedPreviousVolume = 1.0;
 
     function setPlayerInformationCallbacks() {
-        video.addEvent('pause', function() {_paused = true;});
-        video.addEvent('play', function() {_paused = false;});
-        video.addEvent('playProgress', function(value) {_currentTime = value.seconds;});
-        video.addEvent('loadProgress', function(value) {_duration = value.duration;});
-        video.api('getVolume', function(value) {_volume = value;});
-        video.api('getDuration', function(value) {_duration = value;});
+        player.addEvent('pause', function() {_paused = true;});
+        player.addEvent('play', function() {_paused = false;});
+        player.addEvent('playProgress', function(value) {_currentTime = value.seconds;});
+        player.addEvent('loadProgress', function(value) {_duration = value.duration;});
+        player.api('getVolume', function(value) {_volume = value;});
+        player.api('getDuration', function(value) {_duration = value;});
         injectCss();
     }
 
@@ -381,11 +381,11 @@ var vimeoPlayer = function() {
     }
 
     function play() {
-        video.api('play');
+        player.api('play');
     }
 
     function pause() {
-        video.api('pause');
+        player.api('pause');
     }
 
     function destroy() {
@@ -405,7 +405,7 @@ var vimeoPlayer = function() {
 
     function setCurrentTime(time) {
         var wasPaused = paused();
-        video.api('seekTo', time);
+        player.api('seekTo', time);
         if (wasPaused) player.pause();
     }
 
@@ -418,7 +418,7 @@ var vimeoPlayer = function() {
     }
 
     function setVolume(vol) {
-        video.api('setVolume', vol);
+        player.api('setVolume', vol);
         _volume = vol;
     }
 
@@ -432,45 +432,45 @@ var vimeoPlayer = function() {
     }
 
     function unmute() {
-        video.api('setVolume', _mutedPreviousVolume);
+        player.api('setVolume', _mutedPreviousVolume);
         _volume = _mutedPreviousVolume;
     }
 
     function onDurationAvailable(callback) {
-        video.api('ready', function() {
-            video.api('getDuration', function(duration) {
+        player.api('ready', function() {
+            player.api('getDuration', function(duration) {
                 callback(duration);
             })
         });
     }
 
     function onPlay(callback) {
-        video.api('ready', function() {
-            video.addEvent('play', function() {
+        player.api('ready', function() {
+            player.addEvent('play', function() {
                 callback();
             })
         });
     }
 
     function onPause(callback) {
-        video.api('ready', function() {
-            video.addEvent('pause', function() {
+        player.api('ready', function() {
+            player.addEvent('pause', function() {
                 callback();
             })
         });
     }
 
     function onPlayTimeChange(callback) {
-        video.api('ready', function() {
-            video.addEvent('playProgress', function(data) {
+        player.api('ready', function() {
+            player.addEvent('playProgress', function(data) {
                 callback(data.seconds);
             })
         });
     }
 
     function onEnded(callback) {
-        video.api('ready', function() {
-            video.addEvent('finish', function() {
+        player.api('ready', function() {
+            player.addEvent('finish', function() {
                 callback();
             })
         });
