@@ -705,13 +705,7 @@ var soundcloudPlayer = function() {
         playerContainer;
 
     function init(audioUrl, containerId) {
-        var iFrameApiTag = document.getElementById('sc-iframe-api');
-        if (iFrameApiTag) {
-            createPlayer(audioUrl, containerId);
-        }
-        else {
-            loadApi(createPlayer.bind(this, audioUrl, containerId));
-        }
+        loadApi(createPlayer.bind(this, audioUrl, containerId));
     }
 
     function createPlayer(audioUrl, containerId) {
@@ -757,12 +751,14 @@ var soundcloudPlayer = function() {
     }
 
     function destroy() {
-        playerContainer.remove();
         player.unbind(SC.Widget.Events.READY);
         player.unbind(SC.Widget.Events.PLAY);
         player.unbind(SC.Widget.Events.PAUSE);
         player.unbind(SC.Widget.Events.PLAY_PROGRESS);
         player.unbind(SC.Widget.Events.FINISH);
+        playerContainer.remove();
+        document.getElementById('sc-iframe-api').remove();
+        delete window.SC;
     }
 
     function paused() {
