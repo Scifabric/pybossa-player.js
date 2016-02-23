@@ -437,8 +437,7 @@ var vimeoPlayer = function() {
     }
 
     function unmute() {
-        player.api('setVolume', _volumeBeforeMuting);
-        _volume = _volumeBeforeMuting;
+        setVolume(_volumeBeforeMuting);
     }
 
     function onReady(callback) {
@@ -797,8 +796,7 @@ var soundcloudPlayer = function() {
     }
 
     function unmute() {
-        player.setVolume(_volumeBeforeMuting);
-        _volume = _volumeBeforeMuting;
+        setVolume(_volumeBeforeMuting);
     }
 
     function onReady(callback) {
