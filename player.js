@@ -804,15 +804,21 @@ var soundcloudPlayer = function() {
     }
 
     function onPlay(callback) {
+        player.bind(SC.Widget.Events.PLAY, callback);
     }
 
     function onPause(callback) {
+        player.bind(SC.Widget.Events.PAUSE, callback);
     }
 
     function onPlayTimeChange(callback) {
+        player.bind(SC.Widget.Events.PLAY_PROGRESS, function(data) {
+            callback(data.currentPosition / 1000);
+        });
     }
 
     function onEnded(callback) {
+        player.bind(SC.Widget.Events.FINISH, callback);
     }
 
     return {
