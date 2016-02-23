@@ -343,16 +343,16 @@ var vimeoPlayer = function() {
         divWrapper.setAttribute('class', 'vimeoFrame');
         divWrapper.appendChild(this.iframe);
         document.getElementById(containerId).appendChild(divWrapper);
-        player.addEvent('ready', setPlayerInformationCallbacks);
+        player.addEvent('ready', preparePlayer);
     }
 
     var _volume = 1.0,
         _duration = 0,
         _currentTime = 0,
         _paused = true,
-        _mutedPreviousVolume = 1.0;
+        _volumeBeforeMuting = 1.0;
 
-    function setPlayerInformationCallbacks() {
+    function preparePlayer() {
         player.addEvent('pause', function() {_paused = true;});
         player.addEvent('play', function() {_paused = false;});
         player.addEvent('playProgress', function(value) {_currentTime = value.seconds;});
@@ -432,13 +432,13 @@ var vimeoPlayer = function() {
     }
 
     function mute() {
-        _mutedPreviousVolume = volume();
+        _volumeBeforeMuting = volume();
         setVolume(0);
     }
 
     function unmute() {
-        player.api('setVolume', _mutedPreviousVolume);
-        _volume = _mutedPreviousVolume;
+        player.api('setVolume', _volumeBeforeMuting);
+        _volume = _volumeBeforeMuting;
     }
 
     function onReady(callback) {
@@ -697,6 +697,11 @@ var youtubePlayer = function() {
 
 var soundcloudPlayer = function() {
     var player,
+        _volume = 1.0,
+        _duration = 0,
+        _currentTime = 0,
+        _paused = true,
+        _volumeBeforeMuting = 1.0,
         onReadyCallback = function() {};
 
     function init(audioUrl, containerId) {
@@ -717,6 +722,7 @@ var soundcloudPlayer = function() {
         iframe.setAttribute('scrolling', 'no');
         iframe.setAttribute('frameborder', 'no');
         player = SC.Widget(iframe);
+        player.bind(SC.Widget.Events.READY, preparePlayer);
         player.bind(SC.Widget.Events.READY, onReadyCallback);
         document.getElementById(containerId).appendChild(iframe);
     }
@@ -728,6 +734,16 @@ var soundcloudPlayer = function() {
         script.src = 'https://w.soundcloud.com/player/api.js';
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+    }
+
+    function preparePlayer() {
+        player.isPaused(function(paused) {_paused = paused;});
+        player.getDuration(function(duration) {_duration = duration/1000;});
+        player.getPosition(function(position) {_currentTime = position/1000;});
+        player.getVolume(function(volume) {_volume = volume;});
+        player.bind(SC.Widget.Events.PLAY, function(data) {_paused = false;});
+        player.bind(SC.Widget.Events.PAUSE, function(data) {_paused = true;});
+        player.bind(SC.Widget.Events.PLAY_PROGRESS, function(data) {_currentTime = data.currentPosition/1000});
     }
 
     function play() {
@@ -742,33 +758,47 @@ var soundcloudPlayer = function() {
     }
 
     function paused() {
+        return _paused;
     }
 
     function duration() {
+        return _duration;
     }
 
     function currentTime() {
+        return _currentTime;
     }
 
     function setCurrentTime(time) {
+        player.seekTo(time * 1000);
+        _currentTime = time;
     }
 
     function ended() {
+        return currentTime() === duration();
     }
 
     function volume() {
+        return _volume;
     }
 
     function setVolume(vol) {
+        player.setVolume(vol);
+        _volume = vol;
     }
 
     function muted() {
+        return volume() === 0;
     }
 
     function mute() {
+        _volumeBeforeMuting = volume();
+        setVolume(0);
     }
 
     function unmute() {
+        player.setVolume(_volumeBeforeMuting);
+        _volume = _volumeBeforeMuting;
     }
 
     function onReady(callback) {
