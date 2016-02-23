@@ -109,7 +109,7 @@ var html5Player = function(isAudio) {
 
 var vimeoPlayer = function() {
     var player,
-        divWrapper;
+        playerContainer;
 
     function init(videoUrl, containerId) {
         var vimeoApi = (function(){
@@ -338,11 +338,11 @@ var vimeoPlayer = function() {
 
         player = vimeoApi(this.iframe);
 
-        divWrapper = document.createElement('div');
-        divWrapper.setAttribute('style', 'margin:0 auto;padding-bottom:56.25%;width:100%;height:0;position:relative;overflow:hidden;');
-        divWrapper.setAttribute('class', 'vimeoFrame');
-        divWrapper.appendChild(this.iframe);
-        document.getElementById(containerId).appendChild(divWrapper);
+        playerContainer = document.createElement('div');
+        playerContainer.setAttribute('style', 'margin:0 auto;padding-bottom:56.25%;width:100%;height:0;position:relative;overflow:hidden;');
+        playerContainer.setAttribute('class', 'vimeoFrame');
+        playerContainer.appendChild(this.iframe);
+        document.getElementById(containerId).appendChild(playerContainer);
         player.addEvent('ready', preparePlayer);
     }
 
@@ -393,7 +393,7 @@ var vimeoPlayer = function() {
         player.removeEvent('pause');
         player.removeEvent('playProgress');
         player.removeEvent('loadProgress');
-        divWrapper.remove();
+        playerContainer.remove();
     }
 
     function paused() {
@@ -507,12 +507,12 @@ var youtubePlayer = function() {
         onPauseCallback = function() {},
         onPlayTimeChangeCallback = function() {},
         onEndedCallback = function() {},
-        playerContainer = 'youtube-container-' + Date.now(),
+        playerContainerId = 'youtube-container-' + Date.now(),
         timeUpdateInterval;
 
     function init(videoUrl, containerId) {
         var div = document.createElement('div');
-        div.setAttribute('id', playerContainer);
+        div.setAttribute('id', playerContainerId);
         document.getElementById(containerId).appendChild(div);
 
         var iFrameApiTag = document.getElementById('yt-iframe-api');
@@ -535,7 +535,7 @@ var youtubePlayer = function() {
 
     function createPlayer(videoUrl) {
         var videoId = extractVideoId(videoUrl);
-        player = new YT.Player(playerContainer, {
+        player = new YT.Player(playerContainerId, {
             height: '390',
             width: '640',
             videoId: videoId,
@@ -590,7 +590,7 @@ var youtubePlayer = function() {
 
     function destroy() {
         player.destroy();
-        document.getElementById(playerContainer).remove();
+        document.getElementById(playerContainerId).remove();
         if (window.onPreviousPlayerDestroyed) {
             window.onPreviousPlayerDestroyed();
             delete window.onPreviousPlayerDestroyed;
@@ -701,7 +701,8 @@ var soundcloudPlayer = function() {
         _currentTime = 0,
         _paused = true,
         _volumeBeforeMuting = 1.0,
-        onReadyCallback = function() {};
+        onReadyCallback = function() {},
+        playerContainer;
 
     function init(audioUrl, containerId) {
         var iFrameApiTag = document.getElementById('sc-iframe-api');
@@ -714,6 +715,7 @@ var soundcloudPlayer = function() {
     }
 
     function createPlayer(audioUrl, containerId) {
+        playerContainer = document.createElement('div');
         var baseUrl = 'https://w.soundcloud.com/player/?url=';
         var iframe = document.createElement('iframe');
         iframe.setAttribute('src', baseUrl + audioUrl);
@@ -723,7 +725,8 @@ var soundcloudPlayer = function() {
         player = SC.Widget(iframe);
         player.bind(SC.Widget.Events.READY, preparePlayer);
         player.bind(SC.Widget.Events.READY, onReadyCallback);
-        document.getElementById(containerId).appendChild(iframe);
+        playerContainer.appendChild(iframe);
+        document.getElementById(containerId).appendChild(playerContainer);
     }
 
     function loadApi(onload) {
@@ -754,6 +757,12 @@ var soundcloudPlayer = function() {
     }
 
     function destroy() {
+        playerContainer.remove();
+        player.unbind(SC.Widget.Events.READY);
+        player.unbind(SC.Widget.Events.PLAY);
+        player.unbind(SC.Widget.Events.PAUSE);
+        player.unbind(SC.Widget.Events.PLAY_PROGRESS);
+        player.unbind(SC.Widget.Events.FINISH);
     }
 
     function paused() {
