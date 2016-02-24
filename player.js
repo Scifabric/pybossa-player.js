@@ -21,9 +21,7 @@ var PybossaPlayer = function(mediaUrl, containerId, isAudio) {
     }
 
     function isYoutubeLink(link) {
-        var rx = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
-        var r = link.match(rx);
-        return r !== null;
+       return YoutubePlayer().isYoutubeLink(link);
     }
 
     function isVimeoLink(link) {

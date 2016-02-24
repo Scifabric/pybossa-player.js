@@ -45,9 +45,17 @@ const YoutubePlayer = function() {
     }
 
     function extractVideoId(videoUrl) {
-        let rx = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
-        let r = videoUrl.match(rx);
-        return r[1];
+        return matchYoutubeLink[1];
+    }
+
+    function isYoutubeLink(link) {
+        return matchYoutubeLink(link) !== null;
+    }
+
+    function matchYoutubeLink(link) {
+        var rx = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+        var r = link.match(rx);
+        return r;
     }
 
     function onPlayerReady() {
@@ -187,7 +195,8 @@ const YoutubePlayer = function() {
         onPlay: onPlay,
         onPause: onPause,
         onPlayTimeChange: onPlayTimeChange,
-        onEnded: onEnded
+        onEnded: onEnded,
+        isYoutubeLink: isYoutubeLink
     };
 }
 
