@@ -45,7 +45,7 @@ const YoutubePlayer = function() {
     }
 
     function extractVideoId(videoUrl) {
-        return matchYoutubeLink[1];
+        return matchYoutubeLink(videoUrl)[1];
     }
 
     function isYoutubeLink(link) {
