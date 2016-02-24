@@ -216,8 +216,6 @@ const VimeoPlayer = function() {
         this.videoId = videoUrl.split('//player.vimeo.com/video/')[1];
 
         this.iframe = document.createElement('iframe');
-        this.iframe.setAttribute('title', 'Vimeo Video Player');
-        this.iframe.setAttribute('class', 'vimeoplayer');
         this.iframe.setAttribute('src', this.baseUrl + this.videoId + '?api=1');
         this.iframe.setAttribute('frameborder', '0');
         this.iframe.setAttribute('scrolling', 'no');
@@ -225,7 +223,7 @@ const VimeoPlayer = function() {
         player = vimeoApi(this.iframe);
 
         playerContainer = document.createElement('div');
-        playerContainer.setAttribute('class', 'vimeoFrame');
+        playerContainer.setAttribute('class', 'responsivePlayer');
         playerContainer.appendChild(this.iframe);
         document.getElementById(containerId).appendChild(playerContainer);
         player.addEvent('ready', preparePlayer);
@@ -248,7 +246,7 @@ const VimeoPlayer = function() {
     }
 
     function injectCss() {
-      let css = '.vimeoFrame {position: relative;padding-bottom: 56.25%;padding-top: 60px;overflow: hidden;} .vimeoFrame iframe {position: absolute;top: 0;left: 0;width: 100%;height: 100%;}';
+      let css = '.responsivePlayer {position: relative;padding-bottom: 56.25%;padding-top: 60px;overflow: hidden;} .responsivePlayer iframe, .responsivePlayer video, responsivePlayer audio {position: absolute;top: 0;left: 0;width: 100%;height: 100%;}';
 
       let head = document.head || document.getElementsByTagName('head')[0];
 

@@ -6,12 +6,16 @@ const YoutubePlayer = function() {
         onPlayTimeChangeCallback = function() {},
         onEndedCallback = function() {},
         playerContainerId = 'youtube-container-' + Date.now(),
-        timeUpdateInterval;
+        timeUpdateInterval,
+        playerContainer;
 
     function init(videoUrl, containerId) {
         let div = document.createElement('div');
         div.setAttribute('id', playerContainerId);
-        document.getElementById(containerId).appendChild(div);
+        playerContainer = document.createElement('div');
+        playerContainer.setAttribute('class', 'responsivePlayer');
+        playerContainer.appendChild(div);
+        document.getElementById(containerId).appendChild(playerContainer);
 
         let iFrameApiTag = document.getElementById('yt-iframe-api');
         if (iFrameApiTag) {
@@ -34,14 +38,31 @@ const YoutubePlayer = function() {
     function createPlayer(videoUrl) {
         let videoId = extractVideoId(videoUrl);
         player = new YT.Player(playerContainerId, {
-            height: '390',
-            width: '640',
+            width: '100%',
             videoId: videoId,
             events: {
                 onReady: onPlayerReady,
                 onStateChange: onPlayerStateChange
             }
         });
+        injectCss();
+    }
+
+    function injectCss() {
+      let css = '.responsivePlayer {position: relative;padding-bottom: 56.25%;padding-top: 60px;overflow: hidden;} .responsivePlayer iframe, .responsivePlayer video, responsivePlayer audio {position: absolute;top: 0;left: 0;width: 100%;height: 100%;}';
+
+      let head = document.head || document.getElementsByTagName('head')[0];
+
+      let style = document.createElement('style');
+      style.type = 'text/css';
+
+      if (style.styleSheet){
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+
+      head.appendChild(style);
     }
 
     function extractVideoId(videoUrl) {
@@ -97,6 +118,7 @@ const YoutubePlayer = function() {
     function destroy() {
         player.destroy();
         document.getElementById(playerContainerId).remove();
+        playerContainer.remove();
         if (window.onPreviousPlayerDestroyed) {
             window.onPreviousPlayerDestroyed();
             delete window.onPreviousPlayerDestroyed;

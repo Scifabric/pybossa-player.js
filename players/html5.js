@@ -5,7 +5,8 @@ const Html5Player = function(isAudio) {
         const element = isAudio ? "audio" : "video";
         player = document.createElement(element);
         player.setAttribute("src", url);
-        player.setAttribute("width", 512);
+        player.setAttribute('width', '100%');
+        player.setAttribute('height', 'auto');
         player.setAttribute('controls', true);
         document.getElementById(containerId).appendChild(player);
     }
