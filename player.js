@@ -850,7 +850,7 @@ var soundcloudPlayer = function() {
 }
 
 
-var pybossaPlayer = function(mediaUrl, containerId, isAudio) {
+var PybossaPlayer = function(mediaUrl, containerId, isAudio) {
     var player;
 
     if (isVimeoLink(mediaUrl)) {
@@ -975,3 +975,5 @@ var pybossaPlayer = function(mediaUrl, containerId, isAudio) {
         onEnded: onEnded
     };
 }
+
+export default PybossaPlayer;
