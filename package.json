@@ -4,7 +4,8 @@
   "description": "Small javascript library to handle video and audio on PyBossa projects",
   "main": "player.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "browserify -t [ babelify --presets [ es2015 ] ] test.js | tape-run",
+    "build": "browserify player.js -t [ babelify --presets [ es2015 ] ] | uglifyjs -o dist/pybossa-player.min.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,14 @@
   "bugs": {
     "url": "https://github.com/PyBossa/pybossa-player.js/issues"
   },
-  "homepage": "https://github.com/PyBossa/pybossa-player.js#readme"
+  "homepage": "https://github.com/PyBossa/pybossa-player.js#readme",
+  "devDependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-preset-es2015": "^6.5.0",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "tape": "^4.4.0",
+    "tape-run": "^2.1.3",
+    "uglify-js": "^2.6.2"
+  }
 }
