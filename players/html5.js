@@ -2,7 +2,7 @@ const Html5Player = function(isAudio) {
     let player;
 
     function init(url, containerId) {
-        const element = isAudio ? "audio" :  "video";
+        const element = isAudio ? "audio" : "video";
         player = document.createElement(element);
         player.setAttribute("src", url);
         player.setAttribute("width", 512);
