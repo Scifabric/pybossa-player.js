@@ -4,6 +4,27 @@ import YoutubePlayer from './players/youtube';
 import SoundcloudPlayer from './players/soundcloud';
 
 
+function injectCss() {
+    let css = '.responsivePlayer {position: relative;padding-bottom: 56.25%;padding-top: 60px;overflow: hidden;} .responsivePlayer iframe {position: absolute;top: 0;left: 0;width: 100%;height: 100%;}';
+
+    let head = document.head || document.getElementsByTagName('head')[0];
+
+    let style = document.createElement('style');
+    style.type = 'text/css';
+    style.id = "pybossa-player-styles";
+
+    if (!document.getElementById("pybossa-player-styles")) {
+        if (style.styleSheet){
+            style.styleSheet.cssText = css;
+        }
+        else {
+            style.appendChild(document.createTextNode(css));
+        }
+        head.appendChild(style);
+    }
+}
+
+
 var PybossaPlayer = function(mediaUrl, containerId, isAudio) {
     var player;
 
@@ -33,6 +54,7 @@ var PybossaPlayer = function(mediaUrl, containerId, isAudio) {
     }
 
     player.init(mediaUrl, containerId);
+    injectCss();
 
     function play() {
         player.play();
