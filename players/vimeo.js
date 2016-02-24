@@ -221,16 +221,10 @@ const VimeoPlayer = function() {
         this.iframe.setAttribute('src', this.baseUrl + this.videoId + '?api=1');
         this.iframe.setAttribute('frameborder', '0');
         this.iframe.setAttribute('scrolling', 'no');
-        this.iframe.setAttribute('marginWidth', '0');
-        this.iframe.setAttribute('marginHeight', '0');
-        this.iframe.setAttribute('webkitAllowFullScreen', '0');
-        this.iframe.setAttribute('mozallowfullscreen', '0');
-        this.iframe.setAttribute('allowFullScreen', '0');
 
         player = vimeoApi(this.iframe);
 
         playerContainer = document.createElement('div');
-        playerContainer.setAttribute('style', 'margin:0 auto;padding-bottom:56.25%;width:100%;height:0;position:relative;overflow:hidden;');
         playerContainer.setAttribute('class', 'vimeoFrame');
         playerContainer.appendChild(this.iframe);
         document.getElementById(containerId).appendChild(playerContainer);
@@ -254,7 +248,7 @@ const VimeoPlayer = function() {
     }
 
     function injectCss() {
-      let css = '.vimeoplayer { width:100%; height:180%; position:absolute; left:0; top:-40%; }';
+      let css = '.vimeoFrame {position: relative;padding-bottom: 56.25%;padding-top: 60px;overflow: hidden;} .vimeoFrame iframe {position: absolute;top: 0;left: 0;width: 100%;height: 100%;}';
 
       let head = document.head || document.getElementsByTagName('head')[0];
 
