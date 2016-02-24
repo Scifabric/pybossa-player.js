@@ -1,4 +1,4 @@
-var html5Player = function(isAudio) {
+var Html5Player = function(isAudio) {
     var player;
 
     function init(url, containerId) {
@@ -107,7 +107,7 @@ var html5Player = function(isAudio) {
 }
 
 
-var vimeoPlayer = function() {
+var VimeoPlayer = function() {
     var player,
         playerContainer;
 
@@ -500,7 +500,7 @@ var vimeoPlayer = function() {
 }
 
 
-var youtubePlayer = function() {
+var YoutubePlayer = function() {
     var player,
         onReadyCallback = function() {},
         onPlayCallback = function() {},
@@ -694,7 +694,7 @@ var youtubePlayer = function() {
 }
 
 
-var soundcloudPlayer = function() {
+var SoundcloudPlayer = function() {
     var player,
         _volume = 1.0,
         _duration = 0,
@@ -854,16 +854,16 @@ var PybossaPlayer = function(mediaUrl, containerId, isAudio) {
     var player;
 
     if (isVimeoLink(mediaUrl)) {
-        player = vimeoPlayer();
+        player = VimeoPlayer();
     }
     else if (isYoutubeLink(mediaUrl)){
-        player = youtubePlayer();
+        player = YoutubePlayer();
     }
     else if (isSoundcloudLink(mediaUrl)) {
-        player = soundcloudPlayer();
+        player = SoundcloudPlayer();
     }
     else {
-        player = html5Player(isAudio);
+        player = Html5Player(isAudio);
     }
 
     function isYoutubeLink(link) {
