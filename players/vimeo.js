@@ -3,6 +3,8 @@ const VimeoPlayer = function() {
         playerContainer;
 
     function init(videoUrl, containerId) {
+        // Modified version of Froogaloop original by Vimeo:
+        // https://github.com/vimeo/player-api/blob/master/javascript/froogaloop.js
         const vimeoApi = (function(){
             function Froogaloop(iframe) {
                 return new Froogaloop.fn.init(iframe);
