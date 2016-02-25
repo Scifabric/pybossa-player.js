@@ -10,7 +10,7 @@ If you want to install it locally and make some changes, clone this repository a
 
 In order to run the tests, run `npm test`.
 
-# How it works
+# How to use
 
 The library is included in PyBossa servers since versions above v1.5.1. You can use it in any PyBossa project running in a PyBossa server that includes it. Just include the library in yout presenter code:
 
@@ -24,7 +24,7 @@ Create a player with `PybossaPlayer(videoUrl, elementId)`. The element will be c
 
 Do it inside the pybossa.presentTask callback, like so:
 
-```html
+```javascript
 pybossa.presentTask(function(task, deferred) {
     var player = PybossaPlayer(task.info.video_url, 'video-clip');
 
@@ -45,11 +45,11 @@ pybossa.presentTask(function(task, deferred) {
 });
 ```
 
-If you want to make sure an audio element is created, then you need to pass a flag to the constructor:
+If you want to make sure an audio element is created, then you need to pass a `true` flag to the constructor:
 
-`PybossaPlayer(task.info.audio_url, 'video-clip', true)`
+`PybossaPlayer(task.info.audio_url, 'elementId', true)`
 
-You can find a complete example of a project using all the features of the player in [this Crowdcrafting project](). And the source code of that example is right (here)[example.html].
+You can find a complete example of a project using all the features of the player in [this Crowdcrafting project](). The source code of that example is right [here](example.html).
 
 # Compatible media sources
 
