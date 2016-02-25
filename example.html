@@ -1,0 +1,245 @@
+<div id="warning" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="row skeleton">
+    <div class="col-xs-10 col-xs-offset-1 col-sm-8">
+        <h2 id="question">yes or no?</h2>
+    </div>
+    <div class="hidden-xs col-sm-3">
+        <p style="margin-top:30px;"><span id="i18n_working_task">Task</span> <span id="task-id">#</span></p>
+    </div>
+</div>
+<div class="row">
+    <div id="answer" class="top20 col-xs-10 col-xs-offset-1">
+        <button class="btn btn-answer " value="yes">yes</button><button class="btn btn-answer " value="no">no</button>
+    </div>
+    <div class="top20 col-xs-10 col-xs-offset-1">
+        <div id="video-clip" style="max-width: 512px;">
+        </div>
+        <div>
+            <dl class="simple">
+                <dt>Simple Buttons <span>(buttons with simple API calls)</span></dt>
+                <dd><button class="play">Play</button></dd>
+                <dd><button class="pause">Pause</button></dd>
+            </dl>
+            <dl class="modifiers">
+                <dt>Modifier Buttons <span>(buttons that modify the player)</span></dt>
+                <dd><button class="seek">Seek <input type="text" value="30" size="3" maxlength="3" /></button></dd>
+                <dd><button class="volume">Volume <input type="text" value="0.5" size="3" maxlength="3" /></button></dd>
+                <dd><button class="mute">Mute</button></dd>
+                <dd><button class="unmute">Unmute</button></dd>
+            </dl>
+            <dl class="getters">
+                <dt>Getters <span>(buttons that get back a value; logged out in the console)</span></dt>
+                <dd><button class="time">Current Time</button></dd>
+                <dd><button class="duration">Duration</button></dd>
+                <dd><button class="paused">Paused</button></dd>
+                <dd><button class="getVolume">Volume</button></dd>
+                <dd><button class="muted">Muted</button></dd>
+                <dd><button class="ended">Ended</button></dd>
+            </dl>
+            <dl class="console">
+                <dt>Console</dt>
+                <dd><textarea class="output" readonly="readonly"></textarea></dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/static/js/pybossa-player/dist/pybossa-player.min.js"></script>
+
+<script type="text/javascript">
+(function() {
+
+pybossa.taskLoaded(function(task, deferred) {
+    if ( !$.isEmptyObject(task) ) {
+        deferred.resolve(task);
+    }
+    else {
+        deferred.resolve(task);
+    }
+});
+
+function warn_user(type, msg) {
+    var p = $("<p/>");
+    var title;
+
+    if (type === 'info') {
+        title = "Hi there! Please, read this carefully"
+    }
+
+    if (type === 'error') {
+        title = "Ooops! Something went wrong!"
+    }
+    if (type === 'warning') {
+        title = "Hi there! Please, read this carefully"
+    }
+    p.text(msg);
+    $(".modal-title").text(title);
+    $(".modal-body").html(p);
+    $("#warning").modal();
+}
+
+pybossa.presentTask(function(task, deferred) {
+    if ( !$.isEmptyObject(task) ) {
+        var player = PybossaPlayer(task.info.video_url, 'video-clip');
+
+        var apiConsole = document.querySelector('.console .output');
+
+        function apiLog(message) {
+            apiConsole.innerHTML = message + '\n' + apiConsole.innerHTML;
+        }
+
+        function setupSimpleButtons() {
+            var playBtn = $('div dl.simple .play'),
+                pauseBtn = $('div dl.simple .pause');
+
+            playBtn.off('click').on('click', function() {
+                player.play();
+            });
+
+            pauseBtn.off('click').on('click', function() {
+                player.pause();
+            });
+
+        }
+
+        function setupModifierButtons() {
+            var seekBtn = $('div dl.modifiers .seek'),
+                volumeBtn = $('div dl.modifiers .volume'),
+                muteBtn = $('div dl.modifiers .mute'),
+                unmuteBtn = $('div dl.modifiers .unmute');
+
+            seekBtn.off('click').on('click', function(e) {
+                if (e.target != this) {
+                    return false;
+                }
+
+                var seekVal = this.querySelector('input').value;
+
+                player.setCurrentTime(seekVal);
+            });
+
+            volumeBtn.off('click').on('click', function(e) {
+                if (e.target != this) {
+                    return false;
+                }
+
+                var volumeVal = this.querySelector('input').value;
+
+                player.setVolume(volumeVal);
+            });
+
+            muteBtn.off('click').on('click', function(e) {
+                if (e.target != this) {
+                    return false;
+                }
+
+                player.mute();
+            });
+
+            unmuteBtn.off('click').on('click', function(e) {
+                if (e.target != this) {
+                    return false;
+                }
+
+                player.unmute();
+            });
+        }
+
+        function setupGetterButtons() {
+            var timeBtn = $('div dl.getters .time'),
+                durationBtn = $('div dl.getters .duration'),
+                pausedBtn = $('div dl.getters .paused'),
+                getVolumeBtn = $('div dl.getters .getVolume'),
+                mutedBtn = $('div dl.getters .muted'),
+                endedBtn = $('div dl.getters .ended');
+
+            timeBtn.off('click').on('click', function(e) {
+                apiLog('getCurrentTime : ' + player.currentTime());
+            });
+
+            durationBtn.off('click').on('click', function(e) {
+                apiLog('duration : ' + player.duration());
+            });
+
+            pausedBtn.off('click').on('click', function(e) {
+                apiLog('paused? : ' + player.paused());
+            });
+
+            getVolumeBtn.off('click').on('click', function(e) {
+                apiLog('volume : ' + player.volume());
+            });
+
+            mutedBtn.off('click').on('click', function(e) {
+                apiLog('muted : ' + player.muted());
+            });
+
+            endedBtn.off('click').on('click', function(e) {
+                apiLog('ended : ' + player.ended());
+            });
+        }
+
+        player.onReady(function() {
+            apiConsole.innerHTML = '';
+            apiLog("Player ready");
+            setupSimpleButtons();
+            setupModifierButtons();
+            setupGetterButtons();
+
+
+            player.onPlayTimeChange(function(data) {
+                apiLog('Current time: ' + data);
+            });
+
+            player.onPlay(function() {
+                apiLog('Play');
+            });
+
+            player.onPause(function() {
+                apiLog('Pause');
+            });
+
+            player.onEnded(function() {
+                apiLog('Ended');
+            });
+        });
+
+        $('#task-id').html(task.id);
+        $('.btn-answer').off('click').on('click', function(evt) {
+            var $btn = $(this);
+            var answer = $btn.attr("value");
+            if (typeof answer != 'undefined') {
+                pybossa.saveTask(task.id, answer).done(function() {
+                    deferred.resolve();
+                    player.destroy();
+                });
+            }
+            else {
+                warn_user('error', 'Unexpected type of answer.');
+            }
+        });
+    }
+    else {
+        $(".skeleton").hide();
+        warn_user('info', 'You have contributed to all available tasks! Thanks!');
+    }
+});
+
+pybossa.run('testplayerjs');
+
+})();
+</script>
