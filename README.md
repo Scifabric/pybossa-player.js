@@ -55,6 +55,26 @@ You can find a complete example of a project using all the features of the playe
 
 You can use any YouTube links, Vimeo links of the form `https://player.vimeo.com/video/<video_id>`, SoundCloud links (like `https://soundcloud.com/henry-saiz/henry-saiz-fill-me-up-feat`) or any files compatible with the HTML5 audio and video elements (See [here](https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats) for a list of compatible formats).
 
+# API methods
+
+- play(). Plays the current player.
+- pause(). Pauses the current player.
+- destroy(). Destroys the player. Removes it from the DOM too.
+- paused(): bool. Wether the player is paused or not.
+- duration(): number. Duration of the current video/audio, in seconds. If the player is not ready, will return 0.
+- currentTime(): number. Current playback time, in seconds. Will return 0 if player is nor ready.
+- setCurrentTime(number time). Seeks the player to `time`, in seconds.
+- ended(): bool. Wether the playback ended.
+- volume(): number in range(0,1). Volume level.
+- setVolume(number in range(0,1) vol). Sets the volume to `vol`.
+- muted(): bool. Wether the player is muted.
+- mute(). Mutes the player.
+- unmute(). Unmutes the player.
+- onReady(callback). Executes `callback` when player is ready to play.
+- onPlay(callback). Executes `callback` when player state changes to playing. Should be called after player is ready.
+- onPause(callback). Executes `callback` when player state changes to paused. Should be called after player is ready.
+- onPlayTimeChange(callback). Executes `callback` when player's `currentTime changes`. Will be fired during reproduction. Should be called after player is ready.
+- onEnded(callback). Executes `callback` when playback ends. Should be called after player is ready.
 
 # Contributing
 
