@@ -46,7 +46,7 @@ var PybossaPlayer = function(mediaUrl, containerId, isAudio) {
     }
 
     function isVimeoLink(link) {
-        return link.split('.').indexOf('vimeo') !== -1;
+        return link.indexOf('vimeo') !== -1;
     }
 
     function isSoundcloudLink(link) {
