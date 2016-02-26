@@ -28,6 +28,7 @@ const Html5Player = function(isAudio) {
     }
 
     function duration() {
+        if (isNaN(player.duration)) return 0;
         return player.duration;
     }
 
