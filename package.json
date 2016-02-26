@@ -4,7 +4,7 @@
   "description": "Small javascript library to handle video and audio on PyBossa projects",
   "main": "player.js",
   "scripts": {
-    "test": "browserify -t [ babelify --presets [ es2015 ] ] test.js | tape-run",
+    "test": "browserify -t [ babelify --presets [ es2015 ] ] test/*.js | tape-run",
     "build": "browserify player.js -t [ babelify --presets [ es2015 ] ] | uglifyjs -o dist/pybossa-player.min.js"
   },
   "repository": {
