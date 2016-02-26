@@ -49,7 +49,7 @@ If you want to make sure an audio element is created, then you need to pass a `t
 
 `PybossaPlayer(task.info.audio_url, 'elementId', true)`
 
-You can find a complete example of a project using all the features of the player in [this Crowdcrafting project](https://crowdcrafting.org/project/testplayerjs/). The source code of that example is right [here](example.html).
+You can find a complete example of a project using all the features of the player in [this Crowdcrafting project](http://crowdcrafting.org/project/demopybossaplayerjs/). The source code of that example is right [here](example.html).
 
 # Compatible media sources
 
