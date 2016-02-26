@@ -1,9 +1,9 @@
 import test from 'tape';
-import PybossaPlayer from './player';
+import PybossaPlayer from '../player';
 
 const containerId = 'player-container';
-const html5audioUrl = 'http://www.myserver.com/myfile.mp3';
-const html5videoUrl = 'https://dl.dropboxusercontent.com/s/8xsu374ulh7huqi/test1.mp4';
+const html5audioUrl = 'files/audio.mp3';
+const html5videoUrl = 'files/video.mp4';
 const vimeoUrl = 'http://player.vimeo.com/video/422115';
 const youtubeUrl = 'https://www.youtube.com/watch?v=M4TH8rU8wZw';
 const soundcloudUrl = 'https://soundcloud.com/henry-saiz/the-labyrinth-17-roots-of';
@@ -20,7 +20,8 @@ test('HTML5 player is created and inserted into DOM', (assert) => {
   const videoElement = document.getElementsByTagName('video')[0];
 
   assert.ok(videoElement, "Video element found");
-  assert.equals(videoElement.src, html5videoUrl);
+  const containsUrl = videoElement.src.indexOf(html5videoUrl) !== -1;
+  assert.ok(containsUrl);
 
   assert.end();
 });
@@ -37,7 +38,8 @@ test('HTML5 audio player is created if audio option set to true', (assert) => {
   const audioElement = document.getElementsByTagName('audio')[0];
 
   assert.ok(audioElement, "Audio element found");
-  assert.equals(audioElement.src, html5audioUrl);
+  const containsUrl = audioElement.src.indexOf(html5audioUrl) !== -1;
+  assert.ok(containsUrl);
 
   assert.end();
 });
