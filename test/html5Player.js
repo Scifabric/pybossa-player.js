@@ -63,3 +63,60 @@ test('HTML5 player.destroy() removes the player from DOM', (assert) => {
   assert.notOk(document.getElementsByTagName('video')[0]);
 });
 
+test('HTML5 player.duration() returns duration when ready', (assert) => {
+  setUp();
+  assert.plan(1);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  player.onReady(function() {
+    assert.equals(player.duration(), 3.787755);
+    assert.end();
+  });
+});
+
+test('HTML5 player.duration() returns 0 when not ready', (assert) => {
+  setUp();
+  assert.plan(1);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  assert.equals(player.duration(), 0);
+});
+
+test('HTML5 player.setCurrentTime(n) sets playback time to second n', (assert) => {
+  setUp();
+  assert.plan(1);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  player.onReady(function() {
+    player.setCurrentTime(2);
+    assert.equals(player.currentTime(), 2);
+    assert.end();
+  });
+});
+
+test('HTML5 player.ended() returns false if not ended', (assert) => {
+  setUp();
+  assert.plan(1);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  player.onReady(function() {
+    assert.equals(player.ended(), false);
+    assert.end();
+  });
+});
+
+test('HTML5 player.onEnded() accepts a callback executed when ended', (assert) => {
+  setUp();
+  assert.plan(2);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  player.onReady(function() {
+    player.onEnded(function() {
+      assert.pass("player ended");
+      assert.equals(player.ended(), true);
+      assert.end();
+    });
+    player.setCurrentTime(3.75);
+    player.play();
+  });
+});
