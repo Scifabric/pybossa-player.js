@@ -8,12 +8,21 @@ const vimeoUrl = 'http://player.vimeo.com/video/422115';
 const youtubeUrl = 'https://www.youtube.com/watch?v=M4TH8rU8wZw';
 const soundcloudUrl = 'https://soundcloud.com/henry-saiz/the-labyrinth-17-roots-of';
 
-test('HTML5 player is created and inserted into DOM', (assert) => {
+function setUp() {
   const body = document.body;
-  body.innerHTML = '';
-  const container = document.createElement('div');
-  container.setAttribute('id', containerId);
-  body.appendChild(container);
+  if (!document.getElementsByTagName('script')) {
+    const fakeScript = document.createElement('script');
+    body.appendChild(fakeScript);
+  }
+  if (!document.getElementById('containerId')) {
+    const container = document.createElement('div');
+    container.setAttribute('id', containerId);
+    body.appendChild(container);
+  }
+}
+
+test('HTML5 player is created and inserted into DOM', (assert) => {
+  setUp();
 
   const player = PybossaPlayer(html5videoUrl, containerId);
 
@@ -28,11 +37,7 @@ test('HTML5 player is created and inserted into DOM', (assert) => {
 });
 
 test('HTML5 audio player is created if audio option set to true', (assert) => {
-  const body = document.body;
-  body.innerHTML = '';
-  const container = document.createElement('div');
-  container.setAttribute('id', containerId);
-  body.appendChild(container);
+  setUp();
 
   const player = PybossaPlayer(html5audioUrl, containerId, true);
 
@@ -47,11 +52,7 @@ test('HTML5 audio player is created if audio option set to true', (assert) => {
 });
 
 test('Vimeo player is created when passed a Vimeo url', (assert) => {
-  const body = document.body;
-  body.innerHTML = '';
-  const container = document.createElement('div');
-  container.setAttribute('id', containerId);
-  body.appendChild(container);
+  setUp();
   const expectedIframeSrcUrl = vimeoUrl.replace('http', 'https') + '?api=1';
 
   const player = PybossaPlayer(vimeoUrl, containerId);
@@ -66,13 +67,7 @@ test('Vimeo player is created when passed a Vimeo url', (assert) => {
 });
 
 test('Youtube player is created when passed a Youtube url', (assert) => {
-  const body = document.body;
-  body.innerHTML = '';
-  const fakeScript = document.createElement('script');
-  const container = document.createElement('div');
-  container.setAttribute('id', containerId);
-  body.appendChild(container);
-  body.appendChild(fakeScript);
+  setUp();
   assert.plan(1);
 
   const player = PybossaPlayer(youtubeUrl, containerId);
@@ -86,13 +81,7 @@ test('Youtube player is created when passed a Youtube url', (assert) => {
 });
 
 test('Soundcloud player is created when passed a Soundcloud url', (assert) => {
-  const body = document.body;
-  body.innerHTML = '';
-  const fakeScript = document.createElement('script');
-  const container = document.createElement('div');
-  container.setAttribute('id', containerId);
-  body.appendChild(container);
-  body.appendChild(fakeScript);
+  setUp();
 
   const expectedIframeSrcUrl = 'https://w.soundcloud.com/player/?url=' + soundcloudUrl;
   assert.plan(2);

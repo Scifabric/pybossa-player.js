@@ -7,10 +7,15 @@ const html5videoUrl = 'https://raw.githubusercontent.com/PyBossa/pybossa-player.
 
 function setUp() {
   const body = document.body;
-  body.innerHTML = '';
-  const container = document.createElement('div');
-  container.setAttribute('id', containerId);
-  body.appendChild(container);
+  if (!document.getElementsByTagName('script')) {
+    const fakeScript = document.createElement('script');
+    body.appendChild(fakeScript);
+  }
+  if (!document.getElementById('containerId')) {
+    const container = document.createElement('div');
+    container.setAttribute('id', containerId);
+    body.appendChild(container);
+  }
 }
 
 
