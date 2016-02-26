@@ -16,7 +16,7 @@
 
 <div class="row skeleton">
     <div class="col-xs-10 col-xs-offset-1 col-sm-8">
-        <h2 id="question">yes or no?</h2>
+        <h2 id="question">Do you like this video/song?</h2>
     </div>
     <div class="hidden-xs col-sm-3">
         <p style="margin-top:30px;"><span id="i18n_working_task">Task</span> <span id="task-id">#</span></p>
@@ -29,33 +29,38 @@
     <div class="top20 col-xs-10 col-xs-offset-1">
         <div id="video-clip" style="max-width: 512px;">
         </div>
-        <div>
-            <dl class="simple">
-                <dt>Simple Buttons <span>(buttons with simple API calls)</span></dt>
-                <dd><button class="play">Play</button></dd>
-                <dd><button class="pause">Pause</button></dd>
-            </dl>
-            <dl class="modifiers">
-                <dt>Modifier Buttons <span>(buttons that modify the player)</span></dt>
-                <dd><button class="seek">Seek <input type="text" value="30" size="3" maxlength="3" /></button></dd>
-                <dd><button class="volume">Volume <input type="text" value="0.5" size="3" maxlength="3" /></button></dd>
-                <dd><button class="mute">Mute</button></dd>
-                <dd><button class="unmute">Unmute</button></dd>
-            </dl>
-            <dl class="getters">
-                <dt>Getters <span>(buttons that get back a value; logged out in the console)</span></dt>
-                <dd><button class="time">Current Time</button></dd>
-                <dd><button class="duration">Duration</button></dd>
-                <dd><button class="paused">Paused</button></dd>
-                <dd><button class="getVolume">Volume</button></dd>
-                <dd><button class="muted">Muted</button></dd>
-                <dd><button class="ended">Ended</button></dd>
-            </dl>
-            <dl class="console">
-                <dt>Console</dt>
-                <dd><textarea class="output" readonly="readonly"></textarea></dd>
-            </dl>
-        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <dl class="simple">
+            <dt>Simple Buttons <span>(buttons with simple API calls)</span></dt>
+            <dd><button class="play">Play</button></dd>
+            <dd><button class="pause">Pause</button></dd>
+        </dl>
+        <dl class="modifiers">
+            <dt>Modifier Buttons <span>(buttons that modify the player)</span></dt>
+            <dd><button class="seek">Seek <input type="text" value="30" size="3" maxlength="3" /></button></dd>
+            <dd><button class="volume">Volume <input type="text" value="0.5" size="3" maxlength="3" /></button></dd>
+            <dd><button class="mute">Mute</button></dd>
+            <dd><button class="unmute">Unmute</button></dd>
+        </dl>
+        <dl class="getters">
+            <dt>Getters <span>(buttons that get back a value; logged out in the console)</span></dt>
+            <dd><button class="time">Current Time</button></dd>
+            <dd><button class="duration">Duration</button></dd>
+            <dd><button class="paused">Paused</button></dd>
+            <dd><button class="getVolume">Volume</button></dd>
+            <dd><button class="muted">Muted</button></dd>
+            <dd><button class="ended">Ended</button></dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl class="console">
+            <dt>Console</dt>
+            <dd><textarea rows="10" class="output" readonly="readonly"></textarea></dd>
+            <dd><button class="clear">Clear</button></dd>
+        </dl>
     </div>
 </div>
 
@@ -63,6 +68,20 @@
 
 <script type="text/javascript">
 (function() {
+
+function clearConsole() {
+    var apiConsole = document.querySelector('.console .output');
+    apiConsole.innerHTML = '';
+}
+
+function apiLog(message) {
+    var apiConsole = document.querySelector('.console .output');
+    apiConsole.innerHTML = message + '\n' + apiConsole.innerHTML;
+}
+
+$('.clear').on('click', function() {
+    clearConsole();
+});
 
 pybossa.taskLoaded(function(task, deferred) {
     if ( !$.isEmptyObject(task) ) {
@@ -96,12 +115,6 @@ function warn_user(type, msg) {
 pybossa.presentTask(function(task, deferred) {
     if ( !$.isEmptyObject(task) ) {
         var player = PybossaPlayer(task.info.video_url, 'video-clip');
-
-        var apiConsole = document.querySelector('.console .output');
-
-        function apiLog(message) {
-            apiConsole.innerHTML = message + '\n' + apiConsole.innerHTML;
-        }
 
         function setupSimpleButtons() {
             var playBtn = $('div dl.simple .play'),
@@ -194,7 +207,7 @@ pybossa.presentTask(function(task, deferred) {
         }
 
         player.onReady(function() {
-            apiConsole.innerHTML = '';
+            clearConsole();
             apiLog("Player ready");
             setupSimpleButtons();
             setupModifierButtons();
@@ -239,7 +252,7 @@ pybossa.presentTask(function(task, deferred) {
     }
 });
 
-pybossa.run('testplayerjs');
+pybossa.run('demopybossaplayerjs');
 
 })();
 </script>
