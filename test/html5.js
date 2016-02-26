@@ -22,6 +22,7 @@ test('HTML5 player accepts a callback that is fired when ready', (assert) => {
   player.onReady(function() {
     assert.pass("Player is ready");
     assert.end();
+    player.destroy();
   });
 });
 
@@ -34,6 +35,7 @@ test('HTML5 player can be played when ready', (assert) => {
     player.play();
     assert.equals(player.paused(), false);
     assert.end();
+    player.destroy();
   });
 });
 
@@ -48,6 +50,7 @@ test('HTML5 player can be paused when is playing', (assert) => {
     player.pause();
     assert.equals(player.paused(), true);
     assert.end();
+    player.destroy();
   });
 });
 
@@ -61,6 +64,7 @@ test('HTML5 player.destroy() removes the player from DOM', (assert) => {
   player.destroy();
 
   assert.notOk(document.getElementsByTagName('video')[0]);
+  player.destroy();
 });
 
 test('HTML5 player.duration() returns duration when ready', (assert) => {
@@ -71,6 +75,7 @@ test('HTML5 player.duration() returns duration when ready', (assert) => {
   player.onReady(function() {
     assert.equals(player.duration(), 3.787755);
     assert.end();
+    player.destroy();
   });
 });
 
@@ -80,6 +85,7 @@ test('HTML5 player.duration() returns 0 when not ready', (assert) => {
   const player = PybossaPlayer(html5videoUrl, containerId);
 
   assert.equals(player.duration(), 0);
+  player.destroy();
 });
 
 test('HTML5 player.setCurrentTime(n) sets playback time to second n', (assert) => {
@@ -91,6 +97,7 @@ test('HTML5 player.setCurrentTime(n) sets playback time to second n', (assert) =
     player.setCurrentTime(2);
     assert.equals(player.currentTime(), 2);
     assert.end();
+    player.destroy();
   });
 });
 
@@ -102,6 +109,7 @@ test('HTML5 player.ended() returns false if not ended', (assert) => {
   player.onReady(function() {
     assert.equals(player.ended(), false);
     assert.end();
+    player.destroy();
   });
 });
 
@@ -114,6 +122,7 @@ test('HTML5 player volume returns new volume after calling setVolume', (assert) 
     player.setVolume(0.5);
     assert.equals(player.volume(), 0.5);
     assert.end();
+    player.destroy();
   });
 });
 
@@ -128,6 +137,7 @@ test('HTML5 player muted() after muting and unmuting', (assert) => {
     player.unmute();
     assert.equals(player.muted(), false);
     assert.end();
+    player.destroy();
   });
 });
 
@@ -143,6 +153,7 @@ test('HTML5 player unmute() preserves volume prior to muted state', (assert) => 
     player.unmute();
     assert.equals(player.volume(), 0.5);
     assert.end();
+    player.destroy();
   });
 });
 
@@ -156,6 +167,7 @@ test('HTML5 player.onEnded() accepts a callback fired when playback ends', (asse
       assert.pass("player ended");
       assert.equals(player.ended(), true);
       assert.end();
+      player.destroy();
     });
     player.setCurrentTime(3.75);
     player.play();
@@ -171,6 +183,7 @@ test('HTML5 player.onPlay() accepts a callback fired when playback starts', (ass
     player.onPlay(function() {
       assert.pass("Play event fired");
       assert.end();
+      player.destroy();
     });
     player.play();
   });
@@ -185,6 +198,7 @@ test('HTML5 player.onPause() accepts a callback fired when playback pauses', (as
     player.onPause(function() {
       assert.pass("Pause event fired");
       assert.end();
+      player.destroy();
     });
     player.play();
     player.pause();
@@ -200,6 +214,7 @@ test('HTML5 player.onPlayTimeChange() accepts a callback fired when playtime cha
     player.onPlayTimeChange(function() {
       assert.pass("PlayTimeChange event fired");
       assert.end();
+      player.destroy();
     });
     player.play();
     player.pause();

@@ -24,6 +24,7 @@ test('HTML5 player is created and inserted into DOM', (assert) => {
   assert.ok(containsUrl);
 
   assert.end();
+  player.destroy();
 });
 
 test('HTML5 audio player is created if audio option set to true', (assert) => {
@@ -42,6 +43,7 @@ test('HTML5 audio player is created if audio option set to true', (assert) => {
   assert.ok(containsUrl);
 
   assert.end();
+  player.destroy();
 });
 
 test('Vimeo player is created when passed a Vimeo url', (assert) => {
@@ -60,6 +62,7 @@ test('Vimeo player is created when passed a Vimeo url', (assert) => {
   assert.equals(vimeoIframe.src, expectedIframeSrcUrl);
 
   assert.end();
+  player.destroy();
 });
 
 test('Youtube player is created when passed a Youtube url', (assert) => {
@@ -78,6 +81,7 @@ test('Youtube player is created when passed a Youtube url', (assert) => {
 
     assert.ok(youtubeIframe, "Youtube iframe found");
     assert.end();
+    player.destroy();
   });
 });
 
@@ -100,5 +104,6 @@ test('Soundcloud player is created when passed a Soundcloud url', (assert) => {
     assert.ok(soundcloudIframe, "Soundcloud iframe found");
     assert.equals(soundcloudIframe.src, expectedIframeSrcUrl);
     assert.end();
+    player.destroy();
   });
 });
