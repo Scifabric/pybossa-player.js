@@ -105,7 +105,48 @@ test('HTML5 player.ended() returns false if not ended', (assert) => {
   });
 });
 
-test('HTML5 player.onEnded() accepts a callback executed when ended', (assert) => {
+test('HTML5 player volume returns new volume after calling setVolume', (assert) => {
+  setUp();
+  assert.plan(1);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  player.onReady(function() {
+    player.setVolume(0.5);
+    assert.equals(player.volume(), 0.5);
+    assert.end();
+  });
+});
+
+test('HTML5 player muted() after muting and unmuting', (assert) => {
+  setUp();
+  assert.plan(2);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  player.onReady(function() {
+    player.mute();
+    assert.equals(player.muted(), true);
+    player.unmute();
+    assert.equals(player.muted(), false);
+    assert.end();
+  });
+});
+
+test('HTML5 player unmute() preserves volume prior to muted state', (assert) => {
+  setUp();
+  assert.plan(1);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  player.onReady(function() {
+    player.setVolume(1);
+    player.setVolume(0.5);
+    player.mute();
+    player.unmute();
+    assert.equals(player.volume(), 0.5);
+    assert.end();
+  });
+});
+
+test('HTML5 player.onEnded() accepts a callback fired when playback ends', (assert) => {
   setUp();
   assert.plan(2);
   const player = PybossaPlayer(html5videoUrl, containerId);
@@ -118,5 +159,49 @@ test('HTML5 player.onEnded() accepts a callback executed when ended', (assert) =
     });
     player.setCurrentTime(3.75);
     player.play();
+  });
+});
+
+test('HTML5 player.onPlay() accepts a callback fired when playback starts', (assert) => {
+  setUp();
+  assert.plan(1);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  player.onReady(function() {
+    player.onPlay(function() {
+      assert.pass("Play event fired");
+      assert.end();
+    });
+    player.play();
+  });
+});
+
+test('HTML5 player.onPause() accepts a callback fired when playback pauses', (assert) => {
+  setUp();
+  assert.plan(1);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  player.onReady(function() {
+    player.onPause(function() {
+      assert.pass("Pause event fired");
+      assert.end();
+    });
+    player.play();
+    player.pause();
+  });
+});
+
+test('HTML5 player.onPlayTimeChange() accepts a callback fired when playtime changes', (assert) => {
+  setUp();
+  assert.plan(1);
+  const player = PybossaPlayer(html5videoUrl, containerId);
+
+  player.onReady(function() {
+    player.onPlayTimeChange(function() {
+      assert.pass("PlayTimeChange event fired");
+      assert.end();
+    });
+    player.play();
+    player.pause();
   });
 });
