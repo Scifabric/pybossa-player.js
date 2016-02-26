@@ -2,8 +2,8 @@ import test from 'tape';
 import PybossaPlayer from '../player';
 
 const containerId = 'player-container';
-const html5audioUrl = 'files/audio.mp3';
-const html5videoUrl = 'files/video.mp4';
+const html5audioUrl = 'https://raw.githubusercontent.com/PyBossa/pybossa-player.js/master/test/files/audio.mp3';
+const html5videoUrl = 'https://raw.githubusercontent.com/PyBossa/pybossa-player.js/master/test/files/video.mp4';
 const vimeoUrl = 'http://player.vimeo.com/video/422115';
 const youtubeUrl = 'https://www.youtube.com/watch?v=M4TH8rU8wZw';
 const soundcloudUrl = 'https://soundcloud.com/henry-saiz/the-labyrinth-17-roots-of';
