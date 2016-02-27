@@ -53,15 +53,12 @@ test('HTML5 audio player is created if audio option set to true', (assert) => {
 
 test('Vimeo player is created when passed a Vimeo url', (assert) => {
   setUp();
-  const expectedIframeSrcUrl = vimeoUrl.replace('http', 'https') + '?api=1';
-
   const player = PybossaPlayer(vimeoUrl, containerId);
-
+  const expectedIframeSrcUrl = vimeoUrl.replace('http', 'https') + '?api=1&player_id=';
   const vimeoIframe = document.getElementsByTagName('iframe')[0];
 
   assert.ok(vimeoIframe, "Vimeo iframe found");
-  assert.equals(vimeoIframe.src, expectedIframeSrcUrl);
-
+  assert.ok(vimeoIframe.src.indexOf(expectedIframeSrcUrl) !== -1);
   assert.end();
   player.destroy();
 });
