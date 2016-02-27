@@ -245,6 +245,7 @@ const VimeoPlayer = function() {
         player.addEvent('pause', function() {_paused = true;});
         player.addEvent('play', function() {_paused = false;});
         player.addEvent('playProgress', function(value) {_currentTime = value.seconds;});
+        player.addEvent('seek', function(value) {_currentTime = value.seconds;});
         player.api('getVolume', function(value) {_volume = value;});
         player.api('getDuration', function(value) {_duration = value; onReadyCallback();});
     }
@@ -262,6 +263,7 @@ const VimeoPlayer = function() {
         player.removeEvent('play');
         player.removeEvent('pause');
         player.removeEvent('playProgress');
+        player.removeEvent('seek');
         playerContainer.remove();
     }
 
@@ -278,6 +280,7 @@ const VimeoPlayer = function() {
     }
 
     function setCurrentTime(time) {
+        if (time <= _duration) _currentTime = time;
         let wasPaused = paused();
         player.api('seekTo', time);
         if (wasPaused) pause();
