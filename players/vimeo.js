@@ -251,10 +251,12 @@ const VimeoPlayer = function() {
     }
 
     function play() {
+        _paused = false;
         player.api('play');
     }
 
     function pause() {
+        _paused = true;
         player.api('pause');
     }
 
@@ -296,7 +298,7 @@ const VimeoPlayer = function() {
 
     function setVolume(vol) {
         player.api('setVolume', vol);
-        _volume = vol;
+        if (vol <= 1 && vol >= 0) _volume = vol;
     }
 
     function muted() {
