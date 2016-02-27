@@ -1,6 +1,7 @@
 const VimeoPlayer = function() {
     let player,
-        playerContainer;
+        playerContainer,
+        onReadyCallback = function() {};
 
     function init(videoUrl, containerId) {
         // Modified version of Froogaloop original by Vimeo:
@@ -168,7 +169,7 @@ const VimeoPlayer = function() {
             }
 
             function getCallbacks(eventName, target_id) {
-                if (target_id) {
+                if (target_id && eventCallbacks[target_id]) {
                     return eventCallbacks[target_id][eventName];
                 }
                 else {
@@ -219,7 +220,9 @@ const VimeoPlayer = function() {
         this.videoId = videoUrl.split('//player.vimeo.com/video/')[1];
 
         this.iframe = document.createElement('iframe');
-        this.iframe.setAttribute('src', this.baseUrl + this.videoId + '?api=1');
+        const playerId = 'vimeo-' + Date.now();
+        this.iframe.id = playerId;
+        this.iframe.setAttribute('src', this.baseUrl + this.videoId + '?api=1&player_id=' + playerId);
         this.iframe.setAttribute('frameborder', '0');
         this.iframe.setAttribute('scrolling', 'no');
 
@@ -242,9 +245,8 @@ const VimeoPlayer = function() {
         player.addEvent('pause', function() {_paused = true;});
         player.addEvent('play', function() {_paused = false;});
         player.addEvent('playProgress', function(value) {_currentTime = value.seconds;});
-        player.addEvent('loadProgress', function(value) {_duration = value.duration;});
         player.api('getVolume', function(value) {_volume = value;});
-        player.api('getDuration', function(value) {_duration = value;});
+        player.api('getDuration', function(value) {_duration = value; onReadyCallback();});
     }
 
     function play() {
@@ -260,7 +262,6 @@ const VimeoPlayer = function() {
         player.removeEvent('play');
         player.removeEvent('pause');
         player.removeEvent('playProgress');
-        player.removeEvent('loadProgress');
         playerContainer.remove();
     }
 
@@ -309,7 +310,7 @@ const VimeoPlayer = function() {
     }
 
     function onReady(callback) {
-        player.addEvent('ready', callback);
+        onReadyCallback = callback;
     }
 
     function onPlay(callback) {
