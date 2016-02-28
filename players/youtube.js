@@ -7,6 +7,7 @@ const YoutubePlayer = function() {
         onEndedCallback = function() {},
         playerContainerId = 'youtube-container-' + Date.now(),
         timeUpdateInterval,
+        playerReady = false,
         playerContainer;
 
     function init(videoUrl, containerId) {
@@ -62,6 +63,7 @@ const YoutubePlayer = function() {
     }
 
     function onPlayerReady() {
+        playerReady = true;
         onReadyCallback();
     }
 
@@ -113,10 +115,12 @@ const YoutubePlayer = function() {
     }
 
     function duration() {
+        if (!playerReady) return 0;
         return player.getDuration();
     }
 
     function currentTime() {
+        if (!playerReady) return 0;
         return player.getCurrentTime();
     }
 
@@ -151,12 +155,11 @@ const YoutubePlayer = function() {
     }
 
     function onReady(callback) {
-        if (player) {
+        if (playerReady) {
             callback();
+            return;
         }
-        else {
-            onReadyCallback = callback;
-        }
+        onReadyCallback = callback;
     }
 
     function onPlay(callback) {
