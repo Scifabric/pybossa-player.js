@@ -6,14 +6,13 @@ const SoundcloudPlayer = function() {
         _paused = true,
         _volumeBeforeMuting = 1.0,
         onReadyCallback = function() {},
-        playerContainer;
+        playerContainer = document.createElement('div');
 
     function init(audioUrl, containerId) {
         loadApi(createPlayer.bind(this, audioUrl, containerId));
     }
 
     function createPlayer(audioUrl, containerId) {
-        playerContainer = document.createElement('div');
         let baseUrl = 'https://w.soundcloud.com/player/?url=';
         let iframe = document.createElement('iframe');
         iframe.setAttribute('src', baseUrl + audioUrl);
@@ -58,10 +57,11 @@ const SoundcloudPlayer = function() {
             player.unbind(SC.Widget.Events.READY);
             player.unbind(SC.Widget.Events.PLAY);
             player.unbind(SC.Widget.Events.PAUSE);
+            player.unbind(SC.Widget.Events.SEEK);
             player.unbind(SC.Widget.Events.PLAY_PROGRESS);
             player.unbind(SC.Widget.Events.FINISH);
-            playerContainer.remove();
         }
+        playerContainer.remove();
         document.getElementById('sc-iframe-api').remove();
         delete window.SC;
     }
