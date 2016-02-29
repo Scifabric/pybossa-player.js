@@ -7,6 +7,9 @@ const youtubeUrl = 'https://www.youtube.com/watch?v=M4TH8rU8wZw';
 
 function setUp() {
   const body = document.body;
+  if (document.getElementsByTagName('iframe')[0]) {
+    document.getElementsByTagName('iframe')[0].remove();
+  }
   if (!document.getElementsByTagName('script')) {
     const fakeScript = document.createElement('script');
     body.appendChild(fakeScript);

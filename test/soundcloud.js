@@ -6,6 +6,9 @@ const soundcloudUrl = 'https://soundcloud.com/henry-saiz/the-labyrinth-17-roots-
 
 function setUp() {
   const body = document.body;
+  if (document.getElementsByTagName('iframe')[0]) {
+    document.getElementsByTagName('iframe')[0].remove();
+  }
   if (!document.getElementsByTagName('script')) {
     const fakeScript = document.createElement('script');
     body.appendChild(fakeScript);
