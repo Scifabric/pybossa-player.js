@@ -22,7 +22,6 @@ const SoundcloudPlayer = function() {
         iframe.setAttribute('frameborder', 'no');
         player = SC.Widget(iframe);
         player.bind(SC.Widget.Events.READY, preparePlayer);
-        player.bind(SC.Widget.Events.READY, onReadyCallback);
         playerContainer.appendChild(iframe);
         document.getElementById(containerId).appendChild(playerContainer);
     }
@@ -38,11 +37,11 @@ const SoundcloudPlayer = function() {
 
     function preparePlayer() {
         player.isPaused(function(paused) {_paused = paused;});
-        player.getDuration(function(duration) {_duration = duration/1000;});
-        player.getPosition(function(position) {_currentTime = position/1000;});
+        player.getDuration(function(duration) {_duration = duration/1000; onReadyCallback();});
         player.getVolume(function(volume) {_volume = volume;});
         player.bind(SC.Widget.Events.PLAY, function(data) {_paused = false;});
         player.bind(SC.Widget.Events.PAUSE, function(data) {_paused = true;});
+        player.bind(SC.Widget.Events.SEEK, function(data) {_currentTime = data/1000;});
         player.bind(SC.Widget.Events.PLAY_PROGRESS, function(data) {_currentTime = data.currentPosition/1000});
     }
 
@@ -55,12 +54,14 @@ const SoundcloudPlayer = function() {
     }
 
     function destroy() {
-        player.unbind(SC.Widget.Events.READY);
-        player.unbind(SC.Widget.Events.PLAY);
-        player.unbind(SC.Widget.Events.PAUSE);
-        player.unbind(SC.Widget.Events.PLAY_PROGRESS);
-        player.unbind(SC.Widget.Events.FINISH);
-        playerContainer.remove();
+        if (player) {
+            player.unbind(SC.Widget.Events.READY);
+            player.unbind(SC.Widget.Events.PLAY);
+            player.unbind(SC.Widget.Events.PAUSE);
+            player.unbind(SC.Widget.Events.PLAY_PROGRESS);
+            player.unbind(SC.Widget.Events.FINISH);
+            playerContainer.remove();
+        }
         document.getElementById('sc-iframe-api').remove();
         delete window.SC;
     }
@@ -78,12 +79,16 @@ const SoundcloudPlayer = function() {
     }
 
     function setCurrentTime(time) {
+        if (_currentTime === 0) {
+            play();
+            pause();
+        }
         player.seekTo(time * 1000);
         _currentTime = time;
     }
 
     function ended() {
-        return currentTime() === duration();
+        return currentTime() === duration() && duration() !== 0;
     }
 
     function volume() {
